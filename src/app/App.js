@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import './App.css';
 import { Route, BrowserRouter, Redirect, Switch } from 'react-router-dom';
+import fbConnection from '../firebaseRequests/connection';
 import Login from '../components/Login/Login';
 import MyCategories from '../components/MyCategories/MyCategories';
+import firebase from 'firebase';
 
+fbConnection();
 const PrivateRoute = ({ component: Component, authed, ...rest}) => {
   return (
     <Route
@@ -44,6 +47,9 @@ class App extends Component {
   };
   
   render () {
+    if (firebase.apps.length) {
+      console.error('Firebase Initialized!');
+    };
     return (
       <div className="App">
         <BrowserRouter>
