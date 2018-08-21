@@ -5,10 +5,9 @@ import authRequests from '../../firebaseRequests/auth';
 class Login extends React.Component {
   state = {
     user: {
-      email: 'jeffreychencoding@gmail.com',
+      email: 'test@test.com',
       password: '123456',
     },
-
   }
 
   emailChange = e => {
@@ -24,8 +23,8 @@ class Login extends React.Component {
   };
 
   loginClickEvent = (e) => {
-    const { user } = this.state;
     e.preventDefault();
+    const { user } = this.state;
     authRequests
       .loginUser(user)
       .then(() => {

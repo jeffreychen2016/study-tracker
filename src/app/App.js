@@ -34,7 +34,7 @@ const PublicRoute = ({ component: Component, authed, ...rest}) => {
           <Component {...props} />
         ) : (
           <Redirect
-            to={{ pathname: '/MyCategories', state: {from: props.location}}}
+            to={{ pathname: '/mycategories', state: {from: props.location}}}
           />
         )
       }
@@ -53,26 +53,26 @@ class App extends Component {
         this.setState({authed: true});
       } else {
         this.setState({authed: false});
-      };
+      };  
     });
   };
-  
+
+  componentWillUnmount () {
+    this.removeListener();
+  }
+
   render () {
-    if (firebase.apps.length) {
-      console.error('Firebase Initialized!');
-    };
     return (
       <div className="App">
         <BrowserRouter>
           <div>
             <Navbar
               authed={this.state.authed}
-              // logout={this.logout}
             />
             <div className="container">
               <div className="row">
                 <Switch>
-                  <Route path="/" exact component={Login}/>
+                  {/* <Route path="/login" exact component={Login}/> */}
                   <PrivateRoute
                     path="/mycategories"
                     authed={this.state.authed}

@@ -1,12 +1,16 @@
 import React from 'react';
 import './Navbar.css';
 import { Link } from 'react-router-dom';
+import authRequests from '../../firebaseRequests/auth';
 
 class Navbar extends React.Component {
   render () {
     const {authed} = this.props;
-    
-    console.error(authed);
+
+    const logoutClickEvent = () => {
+      authRequests.logoutUser();
+    };
+
     return (
       <div className="Navbar">
         <nav className="navbar navbar-inverse">
@@ -29,7 +33,7 @@ class Navbar extends React.Component {
                     <li className="navbar-form">
                       <button
                         className="btn btn-danger"
-                        // onClick={logoutClick}
+                        onClick={logoutClickEvent}
                       >
                         Logout
                       </button>
