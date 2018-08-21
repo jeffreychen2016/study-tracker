@@ -38,6 +38,12 @@ class CategoryCard extends React.Component {
     });
     return (
       <div className="CategoryCard">
+        <div className="category-card-container col-sm-3">
+          <div className="category-card-body add-category-card">
+            <h4></h4>
+            <button type="button" className="btn btn-default">Add</button>            
+          </div>
+        </div>
         {categoryComponent}
       </div>
     );
