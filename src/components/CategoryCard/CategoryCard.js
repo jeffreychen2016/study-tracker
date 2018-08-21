@@ -8,6 +8,10 @@ class CategoryCard extends React.Component {
   state = {
     categories: [],
     show: false,
+    newCategory: {
+      title: '',
+      description: '',
+    },
   }
 
   componentDidMount () {
@@ -27,6 +31,31 @@ class CategoryCard extends React.Component {
   handleShow = () => {
     this.setState({ show: true });
   }
+
+  titleChange = (e) => {
+    const tempNewCategory = {...this.state.newCategory};
+    tempNewCategory.title = e.target.value;
+    this.setState({newCategory: tempNewCategory});
+  };
+
+  descriptionChange = (e) => {
+    const tempNewCategory = {...this.state.newCategory};
+    tempNewCategory.description = e.target.value;
+    this.setState({newCategory: tempNewCategory});
+  };
+
+  addNewCategoryEvent = () => {
+    const newCategory = this.state.newCategory;
+    newCategory.uid = authRequests.getUserId();
+    categoryRequests.postNewCategory(newCategory)
+      .then(() => {
+        // posted!
+        this.handleClose();
+      })
+      .catch((err) => {
+        console.error('Error with posting new category: ', err);
+      });
+  };
 
   render () {
     const categoryComponent = this.state.categories.map((category) => {
@@ -55,6 +84,7 @@ class CategoryCard extends React.Component {
             <button type="button" className="btn btn-default" onClick={this.handleShow}>Add</button>            
           </div>
         </div>
+
         {categoryComponent}
 
         <div>
@@ -67,19 +97,32 @@ class CategoryCard extends React.Component {
                 <div className="form-group">
                   <label htmlFor="input-add-category-title" className="col-sm-2 control-label">Title</label>
                   <div className="col-sm-10">
-                    <input type="text" className="form-control" id="input-add-category-title" placeholder="Email" />
+                    <input 
+                      type="text" 
+                      className="form-control" 
+                      id="input-add-category-title" 
+                      value={this.state.newCategory.title}
+                      onChange={this.titleChange}
+                    />
                   </div>
                 </div>
                 <div className="form-group">
                   <label htmlFor="input-add-category-description" className="col-sm-2 control-label">Short Description</label>
                   <div className="col-sm-10">
-                    <textarea type="password" className="form-control" id="input-add-category-description"></textarea>
+                    <textarea 
+                      type="password" 
+                      className="form-control" 
+                      id="input-add-category-description"
+                      value={this.state.newCategory.description}
+                      onChange={this.descriptionChange}
+                    >
+                    </textarea>
                   </div>
                 </div>
               </form>
             </Modal.Body>
             <Modal.Footer>
-              <Button onClick={this.handleClose}>Save</Button>
+              <Button onClick={this.addNewCategoryEvent}>Save</Button>
               <Button onClick={this.handleClose}>Close</Button>
             </Modal.Footer>
           </Modal>

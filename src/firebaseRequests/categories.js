@@ -21,4 +21,17 @@ const getAllCategoriesForCurrentUser = (uid) => {
   });
 };
 
-export default {getAllCategoriesForCurrentUser};
+const postNewCategory = (newCategory) => {
+  return new Promise((resolve,reject) => {
+    axios
+      .post(`${constants.firebaseConfig.databaseURL}/categories.json`,newCategory)
+      .then((res) => {
+        resolve(res);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+}
+
+export default {getAllCategoriesForCurrentUser, postNewCategory};
