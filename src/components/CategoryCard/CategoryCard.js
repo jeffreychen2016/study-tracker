@@ -63,7 +63,20 @@ class CategoryCard extends React.Component {
               <Modal.Title>Add New Category</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-  
+              <form className="form-horizontal">
+                <div className="form-group">
+                  <label htmlFor="input-add-category-title" className="col-sm-2 control-label">Title</label>
+                  <div className="col-sm-10">
+                    <input type="text" className="form-control" id="input-add-category-title" placeholder="Email" />
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label htmlFor="input-add-category-description" className="col-sm-2 control-label">Short Description</label>
+                  <div className="col-sm-10">
+                    <textarea type="password" className="form-control" id="input-add-category-description"></textarea>
+                  </div>
+                </div>
+              </form>
             </Modal.Body>
             <Modal.Footer>
               <Button onClick={this.handleClose}>Save</Button>
