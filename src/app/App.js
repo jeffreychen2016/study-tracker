@@ -43,7 +43,17 @@ const PublicRoute = ({ component: Component, authed, ...rest}) => {
 
 class App extends Component {
   state = {
-    authed: true,
+    authed: false,
+  };
+
+  componentDidMount () {
+    this.removeListener = firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.setState({authed: true});
+      } else {
+        this.setState({authed: false});
+      };
+    });
   };
   
   render () {
