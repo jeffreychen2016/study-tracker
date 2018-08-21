@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import './App.css';
 import { Route, BrowserRouter, Redirect, Switch } from 'react-router-dom';
+import fbConnection from '../firebaseRequests/connection';
 import Login from '../components/Login/Login';
 import MyCategories from '../components/MyCategories/MyCategories';
+import firebase from 'firebase';
 
+fbConnection();
 const PrivateRoute = ({ component: Component, authed, ...rest}) => {
   return (
     <Route
@@ -40,10 +43,23 @@ const PublicRoute = ({ component: Component, authed, ...rest}) => {
 
 class App extends Component {
   state = {
-    authed: true,
+    authed: false,
+  };
+
+  componentDidMount () {
+    this.removeListener = firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.setState({authed: true});
+      } else {
+        this.setState({authed: false});
+      };
+    });
   };
   
   render () {
+    if (firebase.apps.length) {
+      console.error('Firebase Initialized!');
+    };
     return (
       <div className="App">
         <BrowserRouter>
