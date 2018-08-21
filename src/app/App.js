@@ -72,7 +72,7 @@ class App extends Component {
             <div className="container">
               <div className="row">
                 <Switch>
-                  {/* <Route path="/login" exact component={Login}/> */}
+                  <Route path="/" exact component={Login}/>
                   <PrivateRoute
                     path="/mycategories"
                     authed={this.state.authed}
