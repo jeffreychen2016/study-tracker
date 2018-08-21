@@ -25,9 +25,13 @@ class CategoryCard extends React.Component {
           className="category-card-container col-sm-3" 
           key={category.id}
         >
-          <div className="category-card">
+          <div className="category-card-body">
             <h4>{category.title}</h4>
             <p>{category.description}</p>
+          </div>
+          <div className="category-card-footer">
+            <button type="button" className="btn btn-default">Edit</button>
+            <button type="button" className="btn btn-default">Delete</button>
           </div>
         </div>
       );
