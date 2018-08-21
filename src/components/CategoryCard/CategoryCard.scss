@@ -1,0 +1,16 @@
+.CategoryCard {
+  background-color: aliceblue;
+  // display: grid;
+  // grid-template-columns: auto auto auto;
+  // grid-column-gap: 20px;
+  // grid-row-gap: 20px;
+
+  .category-card-container {
+    padding: 0 10px;
+    height: 200px;
+
+    .category-card {
+      background-color: antiquewhite;
+    }
+  }
+}

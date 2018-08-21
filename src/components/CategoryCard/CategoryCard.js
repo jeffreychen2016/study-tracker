@@ -21,9 +21,14 @@ class CategoryCard extends React.Component {
   render () {
     const categoryComponent = this.state.categories.map((category) => {
       return (      
-        <div className="category-card" key={category.id}>
-          <h4>{category.title}</h4>
-          <p>{category.description}</p>
+        <div 
+          className="category-card-container col-sm-3" 
+          key={category.id}
+        >
+          <div className="category-card">
+            <h4>{category.title}</h4>
+            <p>{category.description}</p>
+          </div>
         </div>
       );
     });
