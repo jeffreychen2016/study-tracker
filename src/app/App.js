@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import './App.css';
 import { Route, BrowserRouter, Redirect, Switch } from 'react-router-dom';
 import fbConnection from '../firebaseRequests/connection';
+import firebase from 'firebase';
 import Login from '../components/Login/Login';
 import MyCategories from '../components/MyCategories/MyCategories';
-import firebase from 'firebase';
+import Navbar from '../components/Navbar/Navbar';
 
 fbConnection();
 const PrivateRoute = ({ component: Component, authed, ...rest}) => {
@@ -33,7 +34,7 @@ const PublicRoute = ({ component: Component, authed, ...rest}) => {
           <Component {...props} />
         ) : (
           <Redirect
-            to={{ pathname: '/MyCategories', state: {from: props.location}}}
+            to={{ pathname: '/mycategories', state: {from: props.location}}}
           />
         )
       }
@@ -52,22 +53,26 @@ class App extends Component {
         this.setState({authed: true});
       } else {
         this.setState({authed: false});
-      };
+      };  
     });
   };
-  
+
+  componentWillUnmount () {
+    this.removeListener();
+  }
+
   render () {
-    if (firebase.apps.length) {
-      console.error('Firebase Initialized!');
-    };
     return (
       <div className="App">
         <BrowserRouter>
           <div>
+            <Navbar
+              authed={this.state.authed}
+            />
             <div className="container">
               <div className="row">
                 <Switch>
-                  <Route path="/" exact component={Login}/>
+                  {/* <Route path="/login" exact component={Login}/> */}
                   <PrivateRoute
                     path="/mycategories"
                     authed={this.state.authed}
