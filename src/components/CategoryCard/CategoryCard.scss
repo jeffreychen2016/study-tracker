@@ -1,0 +1,32 @@
+.CategoryCard {
+  background-color: aliceblue;
+  // display: grid;
+  // grid-template-columns: auto auto auto;
+  // grid-column-gap: 20px;
+  // grid-row-gap: 20px;
+
+  .category-card-container {
+    padding: 10px;
+    height: 200px;
+
+    .category-card-body {
+      background-color: antiquewhite;
+      height: 75%;
+    }
+
+    .add-category-card {
+      background-color: antiquewhite;
+      height: 100%;      
+    }
+
+    .category-card-footer {
+      background-color: antiquewhite;
+      height: 25%;
+
+      .btn {
+        width: 30%;
+        margin: 0 5px;
+      }
+    }
+  }
+}
