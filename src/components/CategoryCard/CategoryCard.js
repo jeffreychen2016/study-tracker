@@ -12,6 +12,7 @@ class CategoryCard extends React.Component {
       title: '',
       description: '',
     },
+    fromButton:'',
   };
 
   componentDidMount () {
@@ -28,7 +29,9 @@ class CategoryCard extends React.Component {
     this.setState({ show: false });
   }
 
-  handleShow = () => {
+  handleShow = (e) => {
+    const fromButton = e.target.dataset.fromButton;
+    this.setState({fromButton});
     this.setState({ show: true });
   }
 
@@ -99,6 +102,8 @@ class CategoryCard extends React.Component {
               type="button" 
               className="btn btn-default" 
               data-category-edit-id={category.id}
+              data-from-button="edit-btn"
+              onClick={this.handleShow}
             >Edit</button>
             <button 
               type="button" 
@@ -116,7 +121,12 @@ class CategoryCard extends React.Component {
         <div className="category-card-container col-sm-3">
           <div className="category-card-body add-category-card">
             <h4></h4>
-            <button type="button" className="btn btn-default" onClick={this.handleShow}>Add</button>            
+            <button 
+              type="button" 
+              className="btn btn-default" 
+              onClick={this.handleShow}
+              data-from-button="add-btn"
+            >Add</button>            
           </div>
         </div>
 
@@ -125,7 +135,11 @@ class CategoryCard extends React.Component {
         <div>
           <Modal show={this.state.show} onHide={this.handleClose}>
             <Modal.Header closeButton>
-              <Modal.Title>Add New Category</Modal.Title>
+            {
+              this.state.fromButton === 'add-btn' ? 
+              <Modal.Title>Add New Category</Modal.Title> :
+              <Modal.Title>Edit Category</Modal.Title>
+            }
             </Modal.Header>
             <Modal.Body>
               <form className="form-horizontal">
