@@ -34,4 +34,17 @@ const postNewCategory = (newCategory) => {
   });
 }
 
-export default {getAllCategoriesForCurrentUser, postNewCategory};
+const deleteCategory = (categoryId) => {
+  return new Promise((resolve,reject) => {
+    axios
+      .delete(`${constants.firebaseConfig.databaseURL}/categories/${categoryId}.json`)
+      .then((res) => {
+        resolve(res);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
+
+export default {getAllCategoriesForCurrentUser, postNewCategory, deleteCategory};

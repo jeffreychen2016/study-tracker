@@ -66,20 +66,46 @@ class CategoryCard extends React.Component {
       });
   };
 
+  deleteCategoryEvent = (e) => {
+    const categoryId = e.target.dataset.categoryDeleteId;
+    const userId = authRequests.getUserId();
+    categoryRequests.deleteCategory(categoryId)
+      .then(() => {
+        // deleted!
+        categoryRequests.getAllCategoriesForCurrentUser(userId)
+          .then((categories) => {
+            // pull all categories again!
+            this.setState({categories});
+          })
+          .catch((err) => {
+            console.error('Error with pulling all categories again: ',err);
+          });        
+      })
+      .catch((err) => {
+        console.error('Error with deleting category: ', err);
+      });
+  };
+
   render () {
     const categoryComponent = this.state.categories.map((category) => {
       return (      
-        <div 
-          className="category-card-container col-sm-3" 
-          key={category.id}
-        >
+        <div className="category-card-container col-sm-3" key={category.id}>
           <div className="category-card-body">
             <h4>{category.title}</h4>
             <p>{category.description}</p>
           </div>
           <div className="category-card-footer">
-            <button type="button" className="btn btn-default">Edit</button>
-            <button type="button" className="btn btn-default">Delete</button>
+            <button 
+              type="button" 
+              className="btn btn-default" 
+              data-category-edit-id={category.id}
+            >Edit</button>
+            <button 
+              type="button" 
+              className="btn btn-default"
+              data-category-delete-id={category.id}
+              onClick={this.deleteCategoryEvent}
+            >Delete</button>
           </div>
         </div>
       );
