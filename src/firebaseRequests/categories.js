@@ -47,4 +47,30 @@ const deleteCategory = (categoryId) => {
   });
 };
 
-export default {getAllCategoriesForCurrentUser, postNewCategory, deleteCategory};
+const getSingleCategory = (categoryId) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(`${constants.firebaseConfig.databaseURL}/categories/${categoryId}.json`)
+      .then(res => {
+        resolve(res.data);
+      })
+      .catch(err => {
+        reject(err);
+      });
+  });
+};
+
+const updateCategory = (categoryId,updatedCategory) => {
+  return new Promise((resolve,reject) => {
+    axios
+      .put(`${constants.firebaseConfig.databaseURL}/categories/${categoryId}.json`,updatedCategory)
+      .then((res) => {
+        resolve(res);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+}
+
+export default {getAllCategoriesForCurrentUser, postNewCategory, deleteCategory, getSingleCategory, updateCategory};

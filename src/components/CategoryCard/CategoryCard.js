@@ -31,8 +31,8 @@ class CategoryCard extends React.Component {
 
   handleShow = (e) => {
     const fromButton = e.target.dataset.fromButton;
-    this.setState({fromButton});
     this.setState({ show: true });
+    this.setState({fromButton});
   }
 
   titleChange = (e) => {
@@ -89,6 +89,26 @@ class CategoryCard extends React.Component {
       });
   };
 
+
+  // add button would not have a category id
+  // so need to set newCategory to be empty in order to have modal display empty fields
+  populateExistingCategory = (e) => {
+    const categoryId = e.target.dataset.categoryEditId;
+    if (categoryId) {
+      categoryRequests.getSingleCategory(categoryId)
+        .then((category) => {
+          this.setState({newCategory: category});
+        })
+        .catch((err) => {
+          console.error('Error with getting single category: ', err);
+        });
+      this.handleShow(e);
+    } else {
+      this.setState({newCategory: {title: '', description: ''}});
+      this.handleShow(e);
+    };
+  }
+
   render () {
     const categoryComponent = this.state.categories.map((category) => {
       return (      
@@ -103,7 +123,7 @@ class CategoryCard extends React.Component {
               className="btn btn-default" 
               data-category-edit-id={category.id}
               data-from-button="edit-btn"
-              onClick={this.handleShow}
+              onClick={this.populateExistingCategory}
             >Edit</button>
             <button 
               type="button" 
@@ -124,7 +144,7 @@ class CategoryCard extends React.Component {
             <button 
               type="button" 
               className="btn btn-default" 
-              onClick={this.handleShow}
+              onClick={this.populateExistingCategory}
               data-from-button="add-btn"
             >Add</button>            
           </div>
