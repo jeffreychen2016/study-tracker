@@ -30,13 +30,6 @@ class LogCard extends React.Component {
             <button 
               type="button" 
               className="btn btn-default" 
-              data-from-button="view-btn"
-              // onClick={viewStudyLogsEvent}
-            >Get In</button>
-            <br />
-            <button 
-              type="button" 
-              className="btn btn-default" 
               data-log-edit-id={log.id}
               data-from-button="edit-btn"
               // onClick={this.populateExistingCategory}

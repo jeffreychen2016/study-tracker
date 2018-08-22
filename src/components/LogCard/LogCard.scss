@@ -1,0 +1,27 @@
+.LogCard {
+  background-color: aliceblue;
+
+  .log-card-container {
+    padding: 10px;
+    height: 250px;
+
+    .log-card-body {
+      background-color: antiquewhite;
+      height: 70%;
+    }
+
+    .add-log-card {
+      background-color: antiquewhite;
+      height: 100%;      
+    }
+
+    .log-card-footer {
+      background-color: antiquewhite;
+      padding-bottom: 0; 
+
+      .btn {
+        width: 50%;
+      }
+    }
+  }
+}
