@@ -80,7 +80,7 @@ class App extends Component {
                     component={MyCategories}
                   />
                   <PrivateRoute
-                    path="categories/:categoryid/studylogs"
+                    path="/categories/:categoryid/studylogs"
                     authed={this.state.authed}
                     component={StudyLogs}
                   />

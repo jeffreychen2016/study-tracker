@@ -4,7 +4,7 @@ import CategoryCard from '../CategoryCard/CategoryCard';
 
 class MyCategories extends React.Component {
   redirectToStudyLogs = (categoryId) => {
-    this.props.history.push(`categories/${categoryId}/studylogs`);
+    this.props.history.push(`/categories/${categoryId}/studylogs`);
   }
 
   render () {
