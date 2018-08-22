@@ -13,6 +13,7 @@ class CategoryCard extends React.Component {
       description: '',
     },
     fromButton:'',
+    categoryIdSelected:'',
   };
 
   componentDidMount () {
@@ -107,7 +108,31 @@ class CategoryCard extends React.Component {
       this.setState({newCategory: {title: '', description: ''}});
       this.handleShow(e);
     };
+    // set the category id to the state for update function
+    this.setState({categoryIdSelected: categoryId});
   }
+
+  updateCategoryEvent = () => {
+    const updatedCategory = this.state.newCategory;
+    const categoryId = this.state.categoryIdSelected;
+    const userId = authRequests.getUserId();
+    categoryRequests.updateCategory(categoryId,updatedCategory)
+      .then(() => {
+        // updated
+        this.handleClose();
+        categoryRequests.getAllCategoriesForCurrentUser(userId)
+        .then((categories) => {
+          // pull all categories again!
+          this.setState({categories});
+        })
+        .catch((err) => {
+          console.error('Error with pulling all categories again: ',err);
+        }); 
+      })
+      .catch((err) => {
+        console.error('Error with updating category: ', err);
+      })
+  };
 
   render () {
     const categoryComponent = this.state.categories.map((category) => {
@@ -191,7 +216,11 @@ class CategoryCard extends React.Component {
               </form>
             </Modal.Body>
             <Modal.Footer>
-              <Button onClick={this.addNewCategoryEvent}>Save</Button>
+              {
+                this.state.fromButton === 'add-btn' ? 
+                <Button onClick={this.addNewCategoryEvent}>Save</Button> :
+                <Button onClick={this.updateCategoryEvent}>Save</Button>
+              }
               <Button onClick={this.handleClose}>Close</Button>
             </Modal.Footer>
           </Modal>
