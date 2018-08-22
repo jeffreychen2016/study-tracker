@@ -12,7 +12,7 @@ class CategoryCard extends React.Component {
       title: '',
       description: '',
     },
-  }
+  };
 
   componentDidMount () {
     categoryRequests.getAllCategoriesForCurrentUser(authRequests.getUserId())
@@ -46,11 +46,20 @@ class CategoryCard extends React.Component {
 
   addNewCategoryEvent = () => {
     const newCategory = this.state.newCategory;
-    newCategory.uid = authRequests.getUserId();
+    const userId = authRequests.getUserId();
+    newCategory.uid = userId;
     categoryRequests.postNewCategory(newCategory)
       .then(() => {
         // posted!
         this.handleClose();
+        categoryRequests.getAllCategoriesForCurrentUser(userId)
+          .then((categories) => {
+            // pull all categories again!
+            this.setState({categories});
+          })
+          .catch((err) => {
+            console.error('Error with pulling all categories again: ',err);
+          });
       })
       .catch((err) => {
         console.error('Error with posting new category: ', err);
