@@ -7,11 +7,11 @@
 
   .category-card-container {
     padding: 10px;
-    height: 200px;
+    height: 250px;
 
     .category-card-body {
       background-color: antiquewhite;
-      height: 75%;
+      height: 70%;
     }
 
     .add-category-card {
@@ -21,11 +21,14 @@
 
     .category-card-footer {
       background-color: antiquewhite;
-      height: 25%;
+      padding-bottom: 0; 
+
+      .btn:nth-child(1) {
+        width: 100%;
+      }
 
       .btn {
-        width: 30%;
-        margin: 0 5px;
+        width: 50%;
       }
     }
   }

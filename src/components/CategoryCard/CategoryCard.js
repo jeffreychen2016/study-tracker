@@ -149,6 +149,13 @@ class CategoryCard extends React.Component {
               data-category-edit-id={category.id}
               data-from-button="edit-btn"
               onClick={this.populateExistingCategory}
+            >Get In</button><br />
+            <button 
+              type="button" 
+              className="btn btn-default" 
+              data-category-edit-id={category.id}
+              data-from-button="edit-btn"
+              onClick={this.populateExistingCategory}
             >Edit</button>
             <button 
               type="button" 
