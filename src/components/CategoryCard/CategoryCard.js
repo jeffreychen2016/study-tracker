@@ -134,8 +134,15 @@ class CategoryCard extends React.Component {
       })
   };
 
+  // redirectToStudyLogs = (e) => {
+
+  // }
+
   render () {
     const categoryComponent = this.state.categories.map((category) => {
+      const viewStudyLogsEvent = () => {
+        this.props.redirectToStudyLogs(category.id);
+      };
       return (      
         <div className="category-card-container col-sm-3" key={category.id}>
           <div className="category-card-body">
@@ -146,10 +153,10 @@ class CategoryCard extends React.Component {
             <button 
               type="button" 
               className="btn btn-default" 
-              data-category-edit-id={category.id}
-              data-from-button="edit-btn"
-              onClick={this.populateExistingCategory}
-            >Get In</button><br />
+              data-from-button="view-btn"
+              onClick={viewStudyLogsEvent}
+            >Get In</button>
+            <br />
             <button 
               type="button" 
               className="btn btn-default" 

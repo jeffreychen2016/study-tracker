@@ -6,6 +6,7 @@ import firebase from 'firebase';
 import Login from '../components/Login/Login';
 import MyCategories from '../components/MyCategories/MyCategories';
 import Navbar from '../components/Navbar/Navbar';
+import StudyLogs from '../components/StudyLogs/StudyLogs';
 
 fbConnection();
 const PrivateRoute = ({ component: Component, authed, ...rest}) => {
@@ -77,6 +78,11 @@ class App extends Component {
                     path="/mycategories"
                     authed={this.state.authed}
                     component={MyCategories}
+                  />
+                  <PrivateRoute
+                    path="categories/:categoryid/studylogs"
+                    authed={this.state.authed}
+                    component={StudyLogs}
                   />
                   <PublicRoute
                     path="/login"
