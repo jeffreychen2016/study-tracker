@@ -47,4 +47,18 @@ const deleteLog = (logId) => {
   });
 };
 
-export default { getAllLogsForCurrentCategory,postNewLog,deleteLog };
+const getSingleLog = (logId) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(`${constants.firebaseConfig.databaseURL}/logs/${logId}.json`)
+      .then(res => {
+        resolve(res.data);
+      })
+      .catch(err => {
+        reject(err);
+      });
+  });
+};
+
+
+export default { getAllLogsForCurrentCategory,postNewLog,deleteLog,getSingleLog };

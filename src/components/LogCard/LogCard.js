@@ -15,6 +15,7 @@ class LogCard extends React.Component {
       categoryId:'',
     },
     fromButton:'',
+    logIdSelected:'',
   };
 
   componentDidMount () {
@@ -105,6 +106,25 @@ class LogCard extends React.Component {
       });
   };
 
+  populateExistingLog = (e) => {
+    const logId = e.target.dataset.logEditId;
+    if (logId) {
+      logRequests.getSingleLog(logId)
+        .then((log) => {
+          this.setState({newLog: log});
+        })
+        .catch((err) => {
+          console.error('Error with getting single log: ', err);
+        });
+      this.handleShow(e);
+    } else {
+      this.setState({newLog: {title: '', summary: '', timeSpent:'', date:''}});
+      this.handleShow(e);
+    };
+    // set the category id to the state for update function
+    this.setState({logIdSelected: logId});
+  }
+
   render () {
     const logComponent = this.state.logs.map((log) => {
       return (
@@ -121,7 +141,7 @@ class LogCard extends React.Component {
               className="btn btn-default" 
               data-log-edit-id={log.id}
               data-from-button="edit-btn"
-              // onClick={this.populateExistingCategory}
+              onClick={this.populateExistingLog}
             >Edit</button>
             <button 
               type="button" 
@@ -142,8 +162,7 @@ class LogCard extends React.Component {
             <button 
               type="button" 
               className="btn btn-default" 
-              // onClick={this.populateExistingCategory}
-              onClick={this.handleShow}
+              onClick={this.populateExistingLog}
               data-from-button="add-btn"
             >Add</button>            
           </div>
