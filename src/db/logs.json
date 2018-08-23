@@ -1,0 +1,23 @@
+{
+  "log1" : {
+    "title" : "titile1",
+    "summary": "summary1",
+    "timeSpent" : "1",
+    "date": "2018-01-01",
+    "categoryId":"category1"
+  },
+  "log2" : {
+    "title" : "titile2",
+    "summary": "summary2",
+    "timeSpent" : "2",
+    "date": "2018-01-01",
+    "categoryId":"category1"
+  },
+  "log3" : {
+    "title" : "titile3",
+    "summary": "summary3",
+    "timeSpent" : "3",
+    "date": "2018-01-01",
+    "categoryId":"category2"
+  }
+}

@@ -1,31 +1,23 @@
-.CategoryCard {
+.LogCard {
   background-color: aliceblue;
-  // display: grid;
-  // grid-template-columns: auto auto auto;
-  // grid-column-gap: 20px;
-  // grid-row-gap: 20px;
 
-  .category-card-container {
+  .log-card-container {
     padding: 10px;
     height: 250px;
 
-    .category-card-body {
+    .log-card-body {
       background-color: antiquewhite;
       height: 70%;
     }
 
-    .add-category-card {
+    .add-log-card {
       background-color: antiquewhite;
       height: 100%;      
     }
 
-    .category-card-footer {
+    .log-card-footer {
       background-color: antiquewhite;
       padding-bottom: 0; 
-
-      .btn:nth-child(1) {
-        width: 100%;
-      }
 
       .btn {
         width: 50%;
