@@ -134,10 +134,6 @@ class CategoryCard extends React.Component {
       })
   };
 
-  // redirectToStudyLogs = (e) => {
-
-  // }
-
   render () {
     const categoryComponent = this.state.categories.map((category) => {
       const viewStudyLogsEvent = () => {

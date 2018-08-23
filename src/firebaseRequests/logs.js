@@ -21,4 +21,17 @@ const getAllLogsForCurrentCategory = (categoryId) => {
   });
 };
 
-export default { getAllLogsForCurrentCategory };
+const postNewLog = (newLog) => {
+  return new Promise((resolve,reject) => {
+    axios
+      .post(`${constants.firebaseConfig.databaseURL}/logs.json`,newLog)
+      .then((res) => {
+        resolve(res);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+}
+
+export default { getAllLogsForCurrentCategory,postNewLog };
