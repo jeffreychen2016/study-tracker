@@ -178,7 +178,6 @@ class LogCard extends React.Component {
     })
     return (
       <div className="LogCard">
-        <h2>LogCard</h2>
         <div className="log-card-container col-sm-3">
           <div className="log-card-body add-log-card">
             <h4></h4>
@@ -217,36 +216,36 @@ class LogCard extends React.Component {
                   </div>
                 </div>
                 <div className="form-group">
-                  <label htmlFor="input-add-log-title" className="col-sm-2 control-label">Date</label>
+                  <label htmlFor="input-add-log-date" className="col-sm-2 control-label">Date</label>
                   <div className="col-sm-10">
                     <input 
                       type="text" 
                       className="form-control" 
-                      id="input-add-log-title" 
+                      id="input-add-log-date" 
                       value={this.state.newLog.date}
                       onChange={this.dateChange}
                     />
                   </div>
                 </div>
                 <div className="form-group">
-                  <label htmlFor="input-add-log-title" className="col-sm-2 control-label">Time Spent</label>
+                  <label htmlFor="input-add-log-timeSpent" className="col-sm-2 control-label">Time Spent</label>
                   <div className="col-sm-10">
                     <input 
                       type="text" 
                       className="form-control" 
-                      id="input-add-log-title" 
+                      id="input-add-log-timeSpent" 
                       value={this.state.newLog.timeSpent}
                       onChange={this.timeSpentChange}
                     />
                   </div>
                 </div>
                 <div className="form-group">
-                  <label htmlFor="input-add-log-description" className="col-sm-2 control-label">Summary</label>
+                  <label htmlFor="input-add-log-summary" className="col-sm-2 control-label">Summary</label>
                   <div className="col-sm-10">
                     <textarea 
                       type="password" 
                       className="form-control" 
-                      id="input-add-log-description"
+                      id="input-add-log-summary"
                       value={this.state.newLog.summary}
                       onChange={this.summaryChange}
                     >

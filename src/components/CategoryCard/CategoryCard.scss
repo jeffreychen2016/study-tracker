@@ -1,5 +1,6 @@
 .CategoryCard {
-  background-color: aliceblue;
+  background-color: transparent;
+ 
   // display: grid;
   // grid-template-columns: auto auto auto;
   // grid-column-gap: 20px;
@@ -10,18 +11,25 @@
     height: 250px;
 
     .category-card-body {
-      background-color: antiquewhite;
+      background-color: transparent;
       height: 70%;
+      border: 1px solid white;
+      border-bottom: none;
+      border-radius: 6px;
     }
 
     .add-category-card {
-      background-color: antiquewhite;
+      background-color: transparent;
       height: 100%;      
+      border: 1px solid white;
     }
 
     .category-card-footer {
-      background-color: antiquewhite;
+      background-color: transparent;
       padding-bottom: 0; 
+      border: 1px solid white;
+      border-top: none;
+      border-radius: 6px;
 
       .btn:nth-child(1) {
         width: 100%;

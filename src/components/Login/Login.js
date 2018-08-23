@@ -40,7 +40,7 @@ class Login extends React.Component {
 
     return (
       <div className="Login">
-        <h2>Login</h2>
+        <h2 className="login-logo">Study Tracker</h2>
         <form className="col-sm-4 col-sm-offset-4">
           <div className="form-group">
             <label htmlFor="login-email" className="pull-left">Email address</label>
