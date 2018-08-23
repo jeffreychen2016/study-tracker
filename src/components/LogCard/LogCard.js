@@ -74,7 +74,7 @@ class LogCard extends React.Component {
         this.handleClose();
         logRequests.getAllLogsForCurrentCategory(currentCategoryId)
           .then((logs) => {
-            // pull all categories again!
+            // pull all logs again!
             this.setState({logs});
           })
           .catch((err) => {
@@ -94,7 +94,7 @@ class LogCard extends React.Component {
         // deleted!
         logRequests.getAllLogsForCurrentCategory(currentCategoryId)
           .then((logs) => {
-            // pull all categories again!
+            // pull all logs again!
             this.setState({logs});
           })
           .catch((err) => {
@@ -121,9 +121,32 @@ class LogCard extends React.Component {
       this.setState({newLog: {title: '', summary: '', timeSpent:'', date:''}});
       this.handleShow(e);
     };
-    // set the category id to the state for update function
+    // set the log id to the state for update function
     this.setState({logIdSelected: logId});
   }
+
+  updateLogEvent = () => {
+    const updatedLog = this.state.newLog;
+    const logId = this.state.logIdSelected;
+    const currentCategoryId = this.props.categoryId;
+    logRequests.updateLog(logId,updatedLog)
+      .then(() => {
+        // updated
+        this.handleClose();
+        logRequests.getAllLogsForCurrentCategory(currentCategoryId)
+        .then((logs) => {
+          // pull all logs again!
+          this.setState({logs});
+        })
+        .catch((err) => {
+          console.error('Error with pulling all logs again: ',err);
+        }); 
+      })
+      .catch((err) => {
+        console.error('Error with updating log: ', err);
+      })
+  };
+
 
   render () {
     const logComponent = this.state.logs.map((log) => {

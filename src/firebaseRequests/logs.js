@@ -60,5 +60,18 @@ const getSingleLog = (logId) => {
   });
 };
 
+const updateLog = (logId,updatedLog) => {
+  return new Promise((resolve,reject) => {
+    axios
+      .put(`${constants.firebaseConfig.databaseURL}/logs/${logId}.json`,updatedLog)
+      .then((res) => {
+        resolve(res);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+}
 
-export default { getAllLogsForCurrentCategory,postNewLog,deleteLog,getSingleLog };
+
+export default { getAllLogsForCurrentCategory,postNewLog,deleteLog,getSingleLog,updateLog };
