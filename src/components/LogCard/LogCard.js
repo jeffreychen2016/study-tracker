@@ -85,6 +85,26 @@ class LogCard extends React.Component {
       });
   };
 
+  deleteLogEvent = (e) => {
+    const logId = e.target.dataset.logDeleteId;
+    const currentCategoryId = this.props.categoryId;
+    logRequests.deleteLog(logId)
+      .then(() => {
+        // deleted!
+        logRequests.getAllLogsForCurrentCategory(currentCategoryId)
+          .then((logs) => {
+            // pull all categories again!
+            this.setState({logs});
+          })
+          .catch((err) => {
+            console.error('Error with pulling all logs again: ',err);
+          });        
+      })
+      .catch((err) => {
+        console.error('Error with deleting log: ', err);
+      });
+  };
+
   render () {
     const logComponent = this.state.logs.map((log) => {
       return (
@@ -107,7 +127,7 @@ class LogCard extends React.Component {
               type="button" 
               className="btn btn-default"
               data-log-delete-id={log.id}
-              // onClick={this.deleteCategoryEvent}
+              onClick={this.deleteLogEvent}
             >Delete</button>
           </div>
         </div>
