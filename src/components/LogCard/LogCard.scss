@@ -1,26 +1,45 @@
 .LogCard {
-  background-color: aliceblue;
+  color: #000;
+  // display: grid;
+  // grid-template-columns: auto auto auto;
+  // grid-column-gap: 20px;
+  // grid-row-gap: 20px;
 
-  .log-card-container {
+  .log-card-wrapper {
     padding: 10px;
     height: 250px;
 
+    .log-card-container {
+      height: 100%;
+      width: 100%;
+      background-color: #fff;
+      border-radius: 6px;
+      box-shadow: 0 10px 6px -6px #000;
+    }
+
     .log-card-body {
-      background-color: antiquewhite;
       height: 70%;
+      padding-top: 10px;
     }
 
     .add-log-card {
-      background-color: antiquewhite;
       height: 100%;      
     }
 
     .log-card-footer {
-      background-color: antiquewhite;
-      padding-bottom: 0; 
+      height: 30%;
+      .btn:nth-child(1) {
+        border-radius: 0 0 0 6px;
+      }
+
+      .btn:nth-child(2) {
+        border-radius: 0 0 6px 0;
+      }
 
       .btn {
         width: 50%;
+        border-radius: 0;
+        margin-top:35px;
       }
     }
   }

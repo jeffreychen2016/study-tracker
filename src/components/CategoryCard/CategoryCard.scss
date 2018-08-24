@@ -1,42 +1,48 @@
 .CategoryCard {
-  background-color: transparent;
- 
+  color: #000;
   // display: grid;
   // grid-template-columns: auto auto auto;
   // grid-column-gap: 20px;
   // grid-row-gap: 20px;
 
-  .category-card-container {
+  .category-card-wrapper {
     padding: 10px;
     height: 250px;
 
-    .category-card-body {
-      background-color: transparent;
-      height: 70%;
-      border: 1px solid white;
-      border-bottom: none;
+    .category-card-container {
+      height: 100%;
+      width: 100%;
+      background-color: #fff;
       border-radius: 6px;
+      box-shadow: 0 10px 6px -6px #000;
+    }
+
+    .category-card-body {
+      height: 70%;
+      padding-top: 10px;
     }
 
     .add-category-card {
-      background-color: transparent;
       height: 100%;      
-      border: 1px solid white;
     }
 
     .category-card-footer {
-      background-color: transparent;
-      padding-bottom: 0; 
-      border: 1px solid white;
-      border-top: none;
-      border-radius: 6px;
-
       .btn:nth-child(1) {
         width: 100%;
+        border-radius: 0;
+      }
+
+      .btn:nth-child(3) {
+        border-radius: 0 0 0 6px;
+      }
+
+      .btn:nth-child(4) {
+        border-radius: 0 0 6px 0;
       }
 
       .btn {
         width: 50%;
+        border-radius: 0;
       }
     }
   }

@@ -151,42 +151,46 @@ class LogCard extends React.Component {
   render () {
     const logComponent = this.state.logs.map((log) => {
       return (
-        <div className="log-card-container col-sm-3" key={log.id}>
-          <div className="log-card-body">
-            <h4>{log.title}</h4>
-            <p>{log.date}</p>
-            <p>{log.timeSpent}</p>
-            <p>{log.summary}</p>
-          </div>
-          <div className="log-card-footer">
-            <button 
-              type="button" 
-              className="btn btn-default" 
-              data-log-edit-id={log.id}
-              data-from-button="edit-btn"
-              onClick={this.populateExistingLog}
-            >Edit</button>
-            <button 
-              type="button" 
-              className="btn btn-default"
-              data-log-delete-id={log.id}
-              onClick={this.deleteLogEvent}
-            >Delete</button>
+        <div className="log-card-wrapper col-sm-3" key={log.id}>
+          <div className="log-card-container">
+            <div className="log-card-body">
+              <h4>{log.title}</h4>
+              <p>{log.date}</p>
+              <p>{log.timeSpent}</p>
+              <p>{log.summary}</p>
+            </div>
+            <div className="log-card-footer">
+              <button 
+                type="button" 
+                className="btn btn-default" 
+                data-log-edit-id={log.id}
+                data-from-button="edit-btn"
+                onClick={this.populateExistingLog}
+              >Edit</button>
+              <button 
+                type="button" 
+                className="btn btn-default"
+                data-log-delete-id={log.id}
+                onClick={this.deleteLogEvent}
+              >Delete</button>
+            </div>
           </div>
         </div>
       );
     })
     return (
       <div className="LogCard">
-        <div className="log-card-container col-sm-3">
-          <div className="log-card-body add-log-card">
-            <h4></h4>
-            <button 
-              type="button" 
-              className="btn btn-default" 
-              onClick={this.populateExistingLog}
-              data-from-button="add-btn"
-            >Add</button>            
+        <div className="log-card-wrapper col-sm-3">
+          <div className="log-card-container">
+            <div className="log-card-body add-log-card">
+              <h4></h4>
+              <button 
+                type="button" 
+                className="btn btn-default" 
+                onClick={this.populateExistingLog}
+                data-from-button="add-btn"
+              >Add</button>            
+            </div>
           </div>
         </div>
 

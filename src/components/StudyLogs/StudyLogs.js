@@ -8,7 +8,7 @@ class StudyLogs extends React.Component {
   render () {
     return (
       <div className="StudyLogs">
-        <h2>StudyLogs</h2>
+        <h2>Study Logs</h2>
         <LogCard 
           categoryId={this.categoryId}
         />
