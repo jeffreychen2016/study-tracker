@@ -135,37 +135,40 @@ class CategoryCard extends React.Component {
   };
 
   render () {
+    const image = require(`../../imgs/category-card-add.png`);
     const categoryComponent = this.state.categories.map((category) => {
       const viewStudyLogsEvent = () => {
         this.props.redirectToStudyLogs(category.id);
       };
-      return (      
-        <div className="category-card-container col-sm-3" key={category.id}>
-          <div className="category-card-body">
-            <h4>{category.title}</h4>
-            <p>{category.description}</p>
-          </div>
-          <div className="category-card-footer">
-            <button 
-              type="button" 
-              className="btn btn-default" 
-              data-from-button="view-btn"
-              onClick={viewStudyLogsEvent}
-            >Get In</button>
-            <br />
-            <button 
-              type="button" 
-              className="btn btn-default" 
-              data-category-edit-id={category.id}
-              data-from-button="edit-btn"
-              onClick={this.populateExistingCategory}
-            >Edit</button>
-            <button 
-              type="button" 
-              className="btn btn-default"
-              data-category-delete-id={category.id}
-              onClick={this.deleteCategoryEvent}
-            >Delete</button>
+      return (     
+        <div className="category-card-wrapper col-sm-3"  key={category.id}> 
+          <div className="category-card-container">
+            <div className="category-card-body">
+              <h4>{category.title}</h4>
+              <p>{category.description}</p>
+            </div>
+            <div className="category-card-footer">
+              <button 
+                type="button" 
+                className="btn btn-default" 
+                data-from-button="view-btn"
+                onClick={viewStudyLogsEvent}
+              >Get In</button>
+              <br />
+              <button 
+                type="button" 
+                className="btn btn-default" 
+                data-category-edit-id={category.id}
+                data-from-button="edit-btn"
+                onClick={this.populateExistingCategory}
+              >Edit</button>
+              <button 
+                type="button" 
+                className="btn btn-default"
+                data-category-delete-id={category.id}
+                onClick={this.deleteCategoryEvent}
+              >Delete</button>
+            </div>
           </div>
         </div>
       );
@@ -173,15 +176,21 @@ class CategoryCard extends React.Component {
 
     return (
       <div className="CategoryCard">
-        <div className="category-card-container col-sm-3">
-          <div className="category-card-body add-category-card">
-            <h4></h4>
-            <button 
-              type="button" 
-              className="btn btn-default" 
-              onClick={this.populateExistingCategory}
-              data-from-button="add-btn"
-            >Add</button>            
+        <div 
+          className="category-card-wrapper col-sm-3"
+          onClick={this.populateExistingCategory} 
+        >
+          <div className="category-card-container">
+            <div className="category-card-body add-category-card">
+              <h4></h4>
+              <img 
+                type="button" 
+                className="add-btn" 
+                data-from-button="add-btn"
+                src={image}
+              />
+              <label>Add More Categories</label>            
+            </div>
           </div>
         </div>
 

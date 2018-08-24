@@ -2,6 +2,10 @@ body {
     margin: 0;
     padding: 0;
     font-family: sans-serif;
-    background-color: aquamarine;
+    background-image: url("../imgs/background.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
   }
   
