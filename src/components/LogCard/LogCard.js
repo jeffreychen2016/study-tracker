@@ -149,6 +149,7 @@ class LogCard extends React.Component {
 
 
   render () {
+    const image = require(`../../imgs/category-card-add.png`);
     const logComponent = this.state.logs.map((log) => {
       return (
         <div className="log-card-wrapper col-sm-3" key={log.id}>
@@ -180,16 +181,20 @@ class LogCard extends React.Component {
     })
     return (
       <div className="LogCard">
-        <div className="log-card-wrapper col-sm-3">
+        <div 
+          className="log-card-wrapper col-sm-3"
+          onClick={this.populateExistingLog}  
+        >
           <div className="log-card-container">
             <div className="log-card-body add-log-card">
               <h4></h4>
-              <button 
+              <img 
                 type="button" 
-                className="btn btn-default" 
-                onClick={this.populateExistingLog}
+                className="add-btn" 
                 data-from-button="add-btn"
-              >Add</button>            
+                src={image}
+              />
+              <label>Add More Logs</label>  
             </div>
           </div>
         </div>

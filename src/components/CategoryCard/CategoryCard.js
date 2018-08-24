@@ -135,6 +135,7 @@ class CategoryCard extends React.Component {
   };
 
   render () {
+    const image = require(`../../imgs/category-card-add.png`);
     const categoryComponent = this.state.categories.map((category) => {
       const viewStudyLogsEvent = () => {
         this.props.redirectToStudyLogs(category.id);
@@ -175,16 +176,20 @@ class CategoryCard extends React.Component {
 
     return (
       <div className="CategoryCard">
-        <div className="category-card-wrapper col-sm-3">
+        <div 
+          className="category-card-wrapper col-sm-3"
+          onClick={this.populateExistingCategory} 
+        >
           <div className="category-card-container">
             <div className="category-card-body add-category-card">
               <h4></h4>
-              <button 
+              <img 
                 type="button" 
-                className="btn btn-default" 
-                onClick={this.populateExistingCategory}
+                className="add-btn" 
                 data-from-button="add-btn"
-              >Add</button>            
+                src={image}
+              />
+              <label>Add More Categories</label>            
             </div>
           </div>
         </div>
