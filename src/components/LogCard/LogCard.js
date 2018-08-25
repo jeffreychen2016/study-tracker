@@ -2,6 +2,7 @@ import React from 'react';
 import './LogCard.css';
 import logRequests from '../../firebaseRequests/logs';
 import { Modal, Button } from 'react-bootstrap';
+import moment from 'moment';
 
 class LogCard extends React.Component {
   state = {
@@ -107,6 +108,7 @@ class LogCard extends React.Component {
   };
 
   populateExistingLog = (e) => {
+    const currentDate = moment().format('l');
     const logId = e.target.dataset.logEditId;
     if (logId) {
       logRequests.getSingleLog(logId)
@@ -118,7 +120,7 @@ class LogCard extends React.Component {
         });
       this.handleShow(e);
     } else {
-      this.setState({newLog: {title: '', summary: '', timeSpent:'', date:''}});
+      this.setState({newLog: {title: '', summary: '', timeSpent:'', date:currentDate}});
       this.handleShow(e);
     };
     // set the log id to the state for update function
@@ -233,6 +235,7 @@ class LogCard extends React.Component {
                       id="input-add-log-date" 
                       value={this.state.newLog.date}
                       onChange={this.dateChange}
+                      disabled
                     />
                   </div>
                 </div>
