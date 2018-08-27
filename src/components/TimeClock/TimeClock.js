@@ -4,7 +4,10 @@ import timeClockRequests from '../../firebaseRequests/timeClock';
 import authRequests from '../../firebaseRequests/auth';
 import moment from 'moment';
 
-
+// the reason to store the clockedIn status in database instead of just state
+// is because i want the flag to be permantly stored until user changes the flag
+// i only want an user to have only one imcomplete instance of timelog.
+// the user has to clock out before he/she can clock in again
 class TimeClock extends React.Component {
   state = {
     time: "00:00:00",
@@ -71,7 +74,10 @@ class TimeClock extends React.Component {
     
     timeClockRequests.clockIn(currentTimeAndUser)
       .then((timelog) => {
-        this.setState({timelogId: timelog.name});
+        this.setState({
+          timelogId: timelog.name,
+          clockedIn: true,
+        });
       })
       .catch((err) => {
         console.error(`Error with clock in: `, err);
@@ -103,14 +109,13 @@ class TimeClock extends React.Component {
   }
   
   render () {
-    const renderClockInButton = () => {
+    const renderClockButton = () => {
       if (this.state.clockedIn) {
         return (
           <button
-            onClick={this.clockInEvent}
-            disabled
+            onClick={this.clockOutevent}
           >
-          Clock In
+          Clock Out
           </button>
         );
       } else {
@@ -140,12 +145,7 @@ class TimeClock extends React.Component {
             </div>
           </div>
         </div>
-      {renderClockInButton()}
-      <button
-        onClick={this.clockOutevent}
-      >
-        Clock Out
-      </button>
+      {renderClockButton()}
       </div>
     );
   }
