@@ -64,6 +64,7 @@ class App extends Component {
   }
 
   render () {
+    console.error(this.state.clockedIn);
     return (
       <div className="App">
         <BrowserRouter>

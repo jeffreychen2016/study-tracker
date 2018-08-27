@@ -1,10 +1,14 @@
 import React from 'react';
 import './TimeClock.css';
+import timeClockRequests from '../../firebaseRequests/timeClock';
+import authRequests from '../../firebaseRequests/auth';
+
 
 class TimeClock extends React.Component {
   state = {
     time: "00:00:00",
     amPm: "am",
+    timelogId:'',
   }
   
   componentDidMount () {
@@ -37,6 +41,48 @@ class TimeClock extends React.Component {
       amPm: amPm
     });
   }
+
+  clockInEvent = () => {
+    const clockedIn = true;
+    const uid = authRequests.getUserId();
+    const clockedInAt = this.state.time + ' ' + this.state.amPm;
+    const currentTimeAndUser = {
+      clockedIn,
+      uid,
+      clockedInAt,
+      clockedOutAt:'',
+    };
+    
+    timeClockRequests.clockIn(currentTimeAndUser)
+      .then((timelog) => {
+        this.setState({timelogId: timelog.name});
+      })
+      .catch((err) => {
+        console.error(`Error with clock in: `, err);
+      });
+  };
+
+  clockOutevent = () => {
+    const timelogId = this.state.timelogId;
+    timeClockRequests.getSingleTimeLog(timelogId)
+      .then((singleTimeLog) => {
+        const tempTimeLog = singleTimeLog;
+        const clockedOutAt = this.state.time + ' ' + this.state.amPm;
+        tempTimeLog.clockedIn = false;
+        tempTimeLog.clockedOutAt = clockedOutAt;
+        
+        timeClockRequests.clockOut(timelogId,tempTimeLog)
+        .then(() => {
+          console.error('clock out');
+        })
+        .catch((err) => {
+          console.error('Error with clock out: ', err);
+        })
+      })
+      .catch((err) => {
+        console.error('Error getting single time log: ', err);
+      });
+  }
   
   render () {
     return (
@@ -56,6 +102,17 @@ class TimeClock extends React.Component {
             </div>
           </div>
         </div>
+      <button
+        onClick={this.clockInEvent}
+      >
+        Clock In
+      </button>
+      <button
+        onClick={this.clockOutevent}
+      >
+        Clock Out
+      </button>
+      <div>You clocked in at {this.state.time}</div>
       </div>
     );
   }
