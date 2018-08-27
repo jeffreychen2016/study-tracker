@@ -2,6 +2,7 @@ import React from 'react';
 import './TimeClock.css';
 import timeClockRequests from '../../firebaseRequests/timeClock';
 import authRequests from '../../firebaseRequests/auth';
+import moment from 'moment';
 
 
 class TimeClock extends React.Component {
@@ -43,14 +44,17 @@ class TimeClock extends React.Component {
   }
 
   clockInEvent = () => {
+    const currentDate = moment().format('l');
     const clockedIn = true;
     const uid = authRequests.getUserId();
-    const clockedInAt = this.state.time + ' ' + this.state.amPm;
+    const clockedInAt = currentDate + ' ' + this.state.time + ' ' + this.state.amPm;
+    const userClockInStatusFlag = uid + '-' + clockedIn;
     const currentTimeAndUser = {
       clockedIn,
       uid,
       clockedInAt,
       clockedOutAt:'',
+      userClockInStatusFlag,
     };
     
     timeClockRequests.clockIn(currentTimeAndUser)
@@ -63,12 +67,13 @@ class TimeClock extends React.Component {
   };
 
   clockOutevent = () => {
+    const currentDate = moment().format('l');
     const timelogId = this.state.timelogId;
     timeClockRequests.getSingleTimeLog(timelogId)
       .then((singleTimeLog) => {
         
         const tempTimeLog = singleTimeLog;
-        const clockedOutAt = this.state.time + ' ' + this.state.amPm;
+        const clockedOutAt = currentDate + ' ' + this.state.time + ' ' + this.state.amPm;
         tempTimeLog.clockedIn = false;
         tempTimeLog.clockedOutAt = clockedOutAt;
         
