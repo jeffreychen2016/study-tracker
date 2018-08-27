@@ -10,12 +10,24 @@ class TimeClock extends React.Component {
     time: "00:00:00",
     amPm: "am",
     timelogId:'',
+    clockedIn: false,
   }
   
   componentDidMount () {
     this.loadInterval = setInterval(
       this.getTime, 0
     );
+
+    const uid = authRequests.getUserId();
+    const userClockInStatusFlag = uid + '-true';
+
+    timeClockRequests.getLatestTimeLogForCurrentUser(userClockInStatusFlag)
+      .then((userClockInStatus) => {
+        this.setState({clockedIn: userClockInStatus.clockedIn})
+      })
+      .catch((err) => {
+        console.error('Error getting lastest time log for current user: ', err);
+      });
   };
 
   // need to tear down the timer to free up the memory after user leaves the page
@@ -91,6 +103,26 @@ class TimeClock extends React.Component {
   }
   
   render () {
+    const renderClockInButton = () => {
+      if (this.state.clockedIn) {
+        return (
+          <button
+            onClick={this.clockInEvent}
+            disabled
+          >
+          Clock In
+          </button>
+        );
+      } else {
+        return (
+          <button
+            onClick={this.clockInEvent}
+          >
+          Clock In
+          </button>
+        );
+      };
+    };
     return (
       <div className="TimeClock">
         <div className="outer">
@@ -108,11 +140,7 @@ class TimeClock extends React.Component {
             </div>
           </div>
         </div>
-      <button
-        onClick={this.clockInEvent}
-      >
-        Clock In
-      </button>
+      {renderClockInButton()}
       <button
         onClick={this.clockOutevent}
       >

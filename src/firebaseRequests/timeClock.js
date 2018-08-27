@@ -40,4 +40,19 @@ const getSingleTimeLog = (timelogId) => {
   });
 };
 
-export default {clockIn, clockOut, getSingleTimeLog};
+// use the returned value to determine if the user ever clock out after initally clock in
+const getLatestTimeLogForCurrentUser = (userClockInStatusFlag) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(`${constants.firebaseConfig.databaseURL}/timelogs.json?orderBy="userClockInStatusFlag"&equalTo="${userClockInStatusFlag}"`)
+      .then(res => {
+        const logKey = Object.keys(res.data);
+        resolve(res.data[logKey]);
+      })
+      .catch(err => {
+        reject(err);
+      });
+  });
+}
+
+export default {clockIn, clockOut, getSingleTimeLog, getLatestTimeLogForCurrentUser};
