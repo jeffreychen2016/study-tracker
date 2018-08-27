@@ -66,6 +66,7 @@ class TimeClock extends React.Component {
     const timelogId = this.state.timelogId;
     timeClockRequests.getSingleTimeLog(timelogId)
       .then((singleTimeLog) => {
+        
         const tempTimeLog = singleTimeLog;
         const clockedOutAt = this.state.time + ' ' + this.state.amPm;
         tempTimeLog.clockedIn = false;
@@ -112,7 +113,6 @@ class TimeClock extends React.Component {
       >
         Clock Out
       </button>
-      <div>You clocked in at {this.state.time}</div>
       </div>
     );
   }
