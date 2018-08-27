@@ -30,6 +30,9 @@ class Navbar extends React.Component {
                     <li>
                       <Link to="/mycategories">Study Log</Link>
                     </li>
+                    <li>
+                      <Link to="/timeclock">Time Clcok</Link>
+                    </li>
                     <li className="navbar-form">
                       <button
                         className="btn btn-danger"
