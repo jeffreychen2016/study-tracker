@@ -4,7 +4,7 @@ import timeClockRequests from '../../firebaseRequests/timeClock';
 import authRequests from '../../firebaseRequests/auth';
 import moment from 'moment';
 
-// the reason to store the clockedIn status in database instead of just state
+// the reason to store the isClockedIn status in database instead of just state
 // is because i want the flag to be permantly stored until user changes the flag
 // i only want an user to have only one imcomplete instance of timelog.
 // the user has to clock out before he/she can clock in again
@@ -13,7 +13,7 @@ class TimeClock extends React.Component {
     time: "00:00:00",
     amPm: "am",
     timelogId:'',
-    clockedIn: false,
+    isClockedIn: false,
   }
   
   componentDidMount () {
@@ -26,7 +26,8 @@ class TimeClock extends React.Component {
 
     timeClockRequests.getLatestTimeLogForCurrentUser(userClockInStatusFlag)
       .then((userClockInStatus) => {
-        this.setState({clockedIn: userClockInStatus.clockedIn})
+        // if user has not clocked in, then the userClockInStatus will be null
+        this.setState({isClockedIn: userClockInStatus.isClockedIn})
       })
       .catch((err) => {
         console.error('Error getting lastest time log for current user: ', err);
@@ -60,12 +61,12 @@ class TimeClock extends React.Component {
 
   clockInEvent = () => {
     const currentDate = moment().format('l');
-    const clockedIn = true;
+    const isClockedIn = true;
     const uid = authRequests.getUserId();
     const clockedInAt = currentDate + ' ' + this.state.time + ' ' + this.state.amPm;
-    const userClockInStatusFlag = uid + '-' + clockedIn;
+    const userClockInStatusFlag = uid + '-' + isClockedIn;
     const currentTimeAndUser = {
-      clockedIn,
+      isClockedIn,
       uid,
       clockedInAt,
       clockedOutAt:'',
@@ -76,7 +77,7 @@ class TimeClock extends React.Component {
       .then((timelog) => {
         this.setState({
           timelogId: timelog.name,
-          clockedIn: true,
+          isClockedIn: true,
         });
       })
       .catch((err) => {
@@ -87,21 +88,21 @@ class TimeClock extends React.Component {
   clockOutevent = () => {
     const currentDate = moment().format('l');
     const uid = authRequests.getUserId();
-    const clockedIn = true;
-    const userClockInStatusFlag = uid + '-' + clockedIn;
+    const isClockedIn = true;
+    const userClockInStatusFlag = uid + '-' + isClockedIn;
+
     timeClockRequests.getLatestTimeLogForCurrentUser(userClockInStatusFlag)
       .then((userClockInStatus) => {
-        
         const timelogId = this.state.timelogId;
         const tempTimeLog = userClockInStatus;
         const clockedOutAt = currentDate + ' ' + this.state.time + ' ' + this.state.amPm;
-        tempTimeLog.clockedIn = false;
+        tempTimeLog.isClockedIn = false;
         tempTimeLog.clockedOutAt = clockedOutAt;
+        tempTimeLog.userClockInStatusFlag = uid + '-' + 'false';
         
         timeClockRequests.clockOut(timelogId,tempTimeLog)
         .then(() => {
-          this.setState({clockedIn: false});
-          console.error('clock out');
+          this.setState({isClockedIn: false});
         })
         .catch((err) => {
           console.error('Error with clock out: ', err);
@@ -114,7 +115,7 @@ class TimeClock extends React.Component {
   
   render () {
     const renderClockButton = () => {
-      if (this.state.clockedIn) {
+      if (this.state.isClockedIn) {
         return (
           <button
             onClick={this.clockOutevent}
