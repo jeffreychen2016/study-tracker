@@ -27,7 +27,9 @@ class TimeClock extends React.Component {
     timeClockRequests.getLatestTimeLogForCurrentUser(userClockInStatusFlag)
       .then((userClockInStatus) => {
         // if user has not clocked in, then the userClockInStatus will be null
-        this.setState({isClockedIn: userClockInStatus.isClockedIn})
+        if (userClockInStatus) {
+          this.setState({isClockedIn: userClockInStatus.isClockedIn})
+        };
       })
       .catch((err) => {
         console.error('Error getting lastest time log for current user: ', err);
@@ -93,7 +95,7 @@ class TimeClock extends React.Component {
 
     timeClockRequests.getLatestTimeLogForCurrentUser(userClockInStatusFlag)
       .then((userClockInStatus) => {
-        const timelogId = this.state.timelogId;
+        const timelogId = userClockInStatus.id;
         const tempTimeLog = userClockInStatus;
         const clockedOutAt = currentDate + ' ' + this.state.time + ' ' + this.state.amPm;
         tempTimeLog.isClockedIn = false;
@@ -118,6 +120,7 @@ class TimeClock extends React.Component {
       if (this.state.isClockedIn) {
         return (
           <button
+            className="clock-out-btn"
             onClick={this.clockOutevent}
           >
           Clock Out
@@ -126,6 +129,7 @@ class TimeClock extends React.Component {
       } else {
         return (
           <button
+            className="clock-in-btn"
             onClick={this.clockInEvent}
           >
           Clock In
@@ -133,6 +137,7 @@ class TimeClock extends React.Component {
         );
       };
     };
+
     return (
       <div className="TimeClock">
         <div className="outer">

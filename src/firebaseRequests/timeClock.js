@@ -46,11 +46,11 @@ const getLatestTimeLogForCurrentUser = (userClockInStatusFlag) => {
     axios
       .get(`${constants.firebaseConfig.databaseURL}/timelogs.json?orderBy="userClockInStatusFlag"&equalTo="${userClockInStatusFlag}"`)
       .then(res => {
-        console.error('res.data:',res.data);
         let logKey = {};
-        if (res.data !== null) {
-          logKey = Object.keys(res.data);
-          console.error('logKey:',logKey);          
+        // if (res.data !== null) {
+        if (Object.keys(res.data).length > 0) {
+          logKey = Object.keys(res.data)[0];  
+          res.data[logKey].id = logKey; 
         } 
         resolve(res.data[logKey]);
       })
