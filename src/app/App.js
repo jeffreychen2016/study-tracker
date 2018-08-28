@@ -7,6 +7,7 @@ import Login from '../components/Login/Login';
 import MyCategories from '../components/MyCategories/MyCategories';
 import Navbar from '../components/Navbar/Navbar';
 import StudyLogs from '../components/StudyLogs/StudyLogs';
+import TimeClock from '../components/TimeClock/TimeClock';
 
 fbConnection();
 const PrivateRoute = ({ component: Component, authed, ...rest}) => {
@@ -35,7 +36,7 @@ const PublicRoute = ({ component: Component, authed, ...rest}) => {
           <Component {...props} />
         ) : (
           <Redirect
-            to={{ pathname: '/mycategories', state: {from: props.location}}}
+            to={{ pathname: '/timeclock', state: {from: props.location}}}
           />
         )
       }
@@ -83,6 +84,11 @@ class App extends Component {
                     path="/categories/:categoryid/studylogs"
                     authed={this.state.authed}
                     component={StudyLogs}
+                  />
+                  <PrivateRoute
+                    path="/timeclock"
+                    authed={this.state.authed}
+                    component={TimeClock}
                   />
                   <PublicRoute
                     path="/login"
