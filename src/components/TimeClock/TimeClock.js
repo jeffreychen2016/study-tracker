@@ -93,7 +93,8 @@ class TimeClock extends React.Component {
 
     timeClockRequests.getLatestTimeLogForCurrentUser(userClockInStatusFlag)
       .then((userClockInStatus) => {
-        const timelogId = this.state.timelogId;
+        console.error('userClockInStatus:',userClockInStatus);
+        const timelogId = userClockInStatus.id;
         const tempTimeLog = userClockInStatus;
         const clockedOutAt = currentDate + ' ' + this.state.time + ' ' + this.state.amPm;
         tempTimeLog.isClockedIn = false;

@@ -49,8 +49,8 @@ const getLatestTimeLogForCurrentUser = (userClockInStatusFlag) => {
         console.error('res.data:',res.data);
         let logKey = {};
         if (res.data !== null) {
-          logKey = Object.keys(res.data);
-          console.error('logKey:',logKey);          
+          logKey = Object.keys(res.data)[0];  
+          res.data[logKey].id = logKey; 
         } 
         resolve(res.data[logKey]);
       })
