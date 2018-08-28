@@ -120,6 +120,7 @@ class TimeClock extends React.Component {
       if (this.state.isClockedIn) {
         return (
           <button
+            className="clock-out-btn"
             onClick={this.clockOutevent}
           >
           Clock Out
@@ -128,6 +129,7 @@ class TimeClock extends React.Component {
       } else {
         return (
           <button
+            className="clock-in-btn"
             onClick={this.clockInEvent}
           >
           Clock In
@@ -135,6 +137,7 @@ class TimeClock extends React.Component {
         );
       };
     };
+
     return (
       <div className="TimeClock">
         <div className="outer">
