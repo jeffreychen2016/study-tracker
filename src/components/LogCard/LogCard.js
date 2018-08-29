@@ -172,8 +172,16 @@ class LogCard extends React.Component {
 
   printAlertForClockOut = () => {
     if (!this.state.isClockedOut) {
-      return <p>Please clock out!</p>
+      return <p className="clock-out-alert">Please clock out!</p>
     };
+  };
+
+  renderSaveButtons = () => {
+    if (this.state.fromButton === 'add-btn') {
+      return <Button onClick={this.addNewLogEvent} disabled={!this.state.isClockedOut}>Save</Button>;
+    } else {
+      return <Button onClick={this.updateLogEvent}>Save</Button>
+    }
   };
 
   render () {
@@ -294,11 +302,7 @@ class LogCard extends React.Component {
             </Modal.Body>
             <Modal.Footer>
               {this.printAlertForClockOut()}
-              {
-                this.state.fromButton === 'add-btn' ? 
-                <Button onClick={this.addNewLogEvent} disabled={!this.state.isClockedOut}>Save</Button> :
-                <Button onClick={this.updateLogEvent}>Save</Button>
-              }
+              {this.renderSaveButtons()}
               <Button onClick={this.handleClose}>Close</Button>
             </Modal.Footer>
           </Modal>
