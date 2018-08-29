@@ -1,8 +1,11 @@
 import React from 'react';
 import './LogCard.css';
 import logRequests from '../../firebaseRequests/logs';
+import authRequests from '../../firebaseRequests/auth';
+import timeClockRequests from '../../firebaseRequests/timeClock';
 import { Modal, Button } from 'react-bootstrap';
 import moment from 'moment';
+import { createSocket } from 'dgram';
 
 class LogCard extends React.Component {
   state = {
@@ -17,6 +20,7 @@ class LogCard extends React.Component {
     },
     fromButton:'',
     logIdSelected:'',
+    isClockedOut: false,
   };
 
   componentDidMount () {
@@ -125,6 +129,8 @@ class LogCard extends React.Component {
     };
     // set the log id to the state for update function
     this.setState({logIdSelected: logId});
+
+    this.checkIsClockedOut();
   }
 
   updateLogEvent = () => {
@@ -149,6 +155,34 @@ class LogCard extends React.Component {
       })
   };
 
+  // if returns undefined, it means the user has clocked out
+  checkIsClockedOut = () => {
+    const userId = authRequests.getUserId();
+    const userClockInStatusFlag = userId + '-' + 'true';
+    timeClockRequests.getLatestTimeLogForCurrentUser(userClockInStatusFlag)
+      .then((latestTimeLog) => {
+        if (latestTimeLog === undefined) {
+          this.setState({isClockedOut: true});
+        }
+      })
+      .catch((err) => {
+        console.error('Error with getting latest time log: ', err);
+      })
+  }
+
+  printAlertForClockOut = () => {
+    if (!this.state.isClockedOut) {
+      return <p className="clock-out-alert">Please clock out!</p>
+    };
+  };
+
+  renderSaveButtons = () => {
+    if (this.state.fromButton === 'add-btn') {
+      return <Button onClick={this.addNewLogEvent} disabled={!this.state.isClockedOut}>Save</Button>;
+    } else {
+      return <Button onClick={this.updateLogEvent}>Save</Button>
+    }
+  };
 
   render () {
     const image = require(`../../imgs/category-card-add.png`);
@@ -267,11 +301,8 @@ class LogCard extends React.Component {
               </form>
             </Modal.Body>
             <Modal.Footer>
-              {
-                this.state.fromButton === 'add-btn' ? 
-                <Button onClick={this.addNewLogEvent}>Save</Button> :
-                <Button onClick={this.updateLogEvent}>Save</Button>
-              }
+              {this.printAlertForClockOut()}
+              {this.renderSaveButtons()}
               <Button onClick={this.handleClose}>Close</Button>
             </Modal.Footer>
           </Modal>
