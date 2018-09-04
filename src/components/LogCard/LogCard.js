@@ -109,6 +109,7 @@ class LogCard extends React.Component {
   };
 
   populateExistingLog = (e) => {
+    this.getAllSavedHoursForCurrentUserEvent();
     const fromButton = e.target.dataset.fromButton;
     const logId = e.target.dataset.logEditId;
     const currentDate = moment().format('l');
@@ -185,6 +186,17 @@ class LogCard extends React.Component {
     } else {
       return <Button onClick={this.updateLogEvent}>Save</Button>
     }
+  };
+
+  getAllSavedHoursForCurrentUserEvent = () => {
+    const uid = authRequests.getUserId();
+    timeClockRequests.getAllSavedHoursForCurrentUser(uid)
+      .then((savedhours) => {
+        console.error(savedhours.totalHours);
+      })
+      .catch((err) => {
+        console.error('Error getting total saved hours: ',err);
+      });
   };
 
   render () {

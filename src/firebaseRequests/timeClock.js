@@ -60,4 +60,22 @@ const getLatestTimeLogForCurrentUser = (userClockInStatusFlag) => {
   });
 }
 
-export default {clockIn, clockOut, getSingleTimeLog, getLatestTimeLogForCurrentUser};
+const getAllSavedHoursForCurrentUser = (uid) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(`${constants.firebaseConfig.databaseURL}/savedhours.json?orderBy="uid"&equalTo="${uid}"`)
+      .then(res => {
+        let logKey = {};
+        if (Object.keys(res.data).length > 0) {
+          logKey = Object.keys(res.data)[0];  
+          res.data[logKey].id = logKey; 
+        } 
+        resolve(res.data[logKey]);    
+      })
+      .catch(err => {
+        reject(err);
+      });
+  });
+}
+
+export default {clockIn, clockOut, getSingleTimeLog, getLatestTimeLogForCurrentUser,getAllSavedHoursForCurrentUser};
