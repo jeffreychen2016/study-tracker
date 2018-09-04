@@ -76,6 +76,19 @@ const getAllSavedHoursForCurrentUser = (uid) => {
         reject(err);
       });
   });
-}
+};
 
-export default {clockIn, clockOut, getSingleTimeLog, getLatestTimeLogForCurrentUser,getAllSavedHoursForCurrentUser};
+const postStudyHours = (hoursToPost) => {
+  return new Promise((resolve,reject) => {
+    axios
+      .post(`${constants.firebaseConfig.databaseURL}/savedhours.json`,hoursToPost)
+      .then((res) => {
+        resolve(res.data);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
+
+export default {clockIn, clockOut, getSingleTimeLog, getLatestTimeLogForCurrentUser,getAllSavedHoursForCurrentUser,postStudyHours};

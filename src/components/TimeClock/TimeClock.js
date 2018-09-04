@@ -103,8 +103,9 @@ class TimeClock extends React.Component {
         tempTimeLog.userClockInStatusFlag = uid + '-' + 'false';
         
         timeClockRequests.clockOut(timelogId,tempTimeLog)
-        .then(() => {
-          this.setState({isClockedIn: false});
+        .then((studySessionObject) => {
+          // need to post the duration here
+          this.setState({isClockedIn: false}, console.error(this.getStudyDuration(studySessionObject.data)));
         })
         .catch((err) => {
           console.error('Error with clock out: ', err);
@@ -113,6 +114,14 @@ class TimeClock extends React.Component {
       .catch((err) => {
         console.error('Error getting single time log: ', err);
       });
+  };
+
+  getStudyDuration = (studySession) => {
+    const start = moment(studySession.clockedOutAt);
+    const end = moment(studySession.clockedInAt); 
+    const diff = start.diff(end);
+    const duration = moment.utc(diff).format("HH:mm:ss");
+    return duration;
   };
 
   render () {
