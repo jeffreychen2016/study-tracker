@@ -5,7 +5,6 @@ import authRequests from '../../firebaseRequests/auth';
 import timeClockRequests from '../../firebaseRequests/timeClock';
 import { Modal, Button } from 'react-bootstrap';
 import moment from 'moment';
-import { createSocket } from 'dgram';
 
 class LogCard extends React.Component {
   state = {
@@ -172,7 +171,7 @@ class LogCard extends React.Component {
       .catch((err) => {
         console.error('Error with getting latest time log: ', err);
       })
-  }
+  };
 
   printAlertForClockOut = () => {
     if (!this.state.isClockedOut) {

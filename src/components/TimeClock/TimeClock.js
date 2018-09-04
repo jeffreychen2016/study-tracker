@@ -113,7 +113,7 @@ class TimeClock extends React.Component {
       .catch((err) => {
         console.error('Error getting single time log: ', err);
       });
-  }
+  };
   
   render () {
     const renderClockButton = () => {
