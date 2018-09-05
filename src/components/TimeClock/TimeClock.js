@@ -14,9 +14,11 @@ class TimeClock extends React.Component {
     amPm: "am",
     timelogId:'',
     isClockedIn: false,
+    totalSavedHours: '00:00:00',
   }
   
   componentDidMount () {
+    this.getTotalHours();
     this.loadInterval = setInterval(
       this.getTime, 0
     );
@@ -105,7 +107,8 @@ class TimeClock extends React.Component {
         timeClockRequests.clockOut(timelogId,tempTimeLog)
         .then((studySessionObject) => {
           // need to post the duration here
-          this.setState({isClockedIn: false}, console.error(this.getStudyDuration(studySessionObject.data)));
+          this.setState({isClockedIn: false})
+          this.postStudyHoursEvent(studySessionObject.data);
         })
         .catch((err) => {
           console.error('Error with clock out: ', err);
@@ -122,6 +125,45 @@ class TimeClock extends React.Component {
     const diff = start.diff(end);
     const duration = moment.utc(diff).format("HH:mm:ss");
     return duration;
+  };
+
+  getTotalHours = () => {
+    const uid = authRequests.getUserId();
+    timeClockRequests.getAllSavedHoursForCurrentUser(uid)
+      .then((savedhours) => {
+        if (savedhours.totalHours) {
+          const totalSavedHours = savedhours.totalHours;
+          this.setState({totalSavedHours});
+        } else {
+          this.setState({totalSavedHours: '00:00:00'});
+        }
+      })
+      .catch((err) => {
+        console.error('Error getting total saved hours: ',err);
+      });
+  };
+
+  calculateNewTotalHours = (studySessionObject) => {
+    const newTotalStudyHoursToPost = this.state.totalSavedHours + this.getStudyDuration(studySessionObject);
+    console.error('newTotalStudyHoursToPost:',newTotalStudyHoursToPost);
+    return newTotalStudyHoursToPost;
+  };
+
+  postStudyHoursEvent = (studySessionObject) => {
+    const uid = authRequests.getUserId();
+    // const newTotalHours = this.calculateNewTotalHours(studySessionObject);
+    const newTotalHours = '01:15:01';
+    console.error('test:',moment.duration(newTotalHours));
+
+    const objectToPost = {totalHours: newTotalHours, uid: uid};
+
+    timeClockRequests.postStudyHours(objectToPost)
+      .then(() => {
+        // console.error('Posted');
+      })
+      .catch((err) => {
+        console.error('Error posting the study time: ',err);
+      })
   };
 
   render () {
