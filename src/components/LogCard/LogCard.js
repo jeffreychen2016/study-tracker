@@ -13,7 +13,9 @@ class LogCard extends React.Component {
     newLog: {
       title: '',
       summary: '',
-      timeSpent:'',
+      hours: 0,
+      minutes:0,
+      seconds:0,
       date:'',
       categoryId:'',
     },
@@ -55,9 +57,21 @@ class LogCard extends React.Component {
     this.setState({newLog: tempNewLog});
   };
 
-  timeSpentChange = (e) => {
+  hourSpentChange = (e) => {
     const tempNewLog = {...this.state.newLog};
-    tempNewLog.timeSpent = e.target.value;
+    tempNewLog.hours = e.target.value;
+    this.setState({newLog: tempNewLog});
+  };
+
+  minuteSpentChange = (e) => {
+    const tempNewLog = {...this.state.newLog};
+    tempNewLog.minutes = e.target.value;
+    this.setState({newLog: tempNewLog});
+  };
+
+  secondSpentChange = (e) => {
+    const tempNewLog = {...this.state.newLog};
+    tempNewLog.seconds = e.target.value;
     this.setState({newLog: tempNewLog});
   };
 
@@ -126,7 +140,14 @@ class LogCard extends React.Component {
           });
         this.checkIsClockedOut();
       } else {
-        this.setState({newLog: {title: '', summary: '', timeSpent:'', date:currentDate}});
+        this.setState({newLog: {
+          title: '', 
+          summary: '', 
+          hours: 0,
+          minutes: 0,
+          seconds: 0,
+          date:currentDate}
+        });
         this.checkIsClockedOut();
       };
       // set the log id to the state for update function
@@ -225,7 +246,21 @@ class LogCard extends React.Component {
     return hours + ':' + munites + ':' + seconds;
   }
 
+  // defaultStudyHour = () => {
+  //   const tempTime = moment.duration(this.state.totalSavedTime);
+  //   let hours;
+
+  //   if (tempTime.hours() < 10) {
+  //     hours = '0' + tempTime.hours();
+  //   } else {
+  //     hours = tempTime.hours();
+  //   };
+
+  //   return hours;
+  // };
+
   render () {
+    console.error(this.state.newLog.hours);
     const image = require(`../../imgs/category-card-add.png`);
     const logComponent = this.state.logs.map((log) => {
       return (
@@ -320,31 +355,34 @@ class LogCard extends React.Component {
                     <div className="input-time-segment">
                       <input 
                         type="number" 
-                        min={0}
+                        // min={0}
+                        // defaultValue={this.state.newLog.hours}
                         className="form-control" 
                         id="input-add-log-timeSpent" 
-                        value={this.state.totalSavedTime}
-                        onChange={this.timeSpentChange}
+                        value={this.state.newLog.hours}
+                        onChange={this.hourSpentChange}
                       />
                     </div>
                     <div className="input-time-segment">
                       <input 
                         type="number" 
-                        min={0}
+                        // min={0}
+                        // defaultValue={this.state.newLog.minutes}
                         className="form-control" 
                         id="input-add-log-timeSpent" 
-                        value={this.state.totalSavedTime}
-                        onChange={this.timeSpentChange}
+                        value={this.state.newLog.minutes}
+                        onChange={this.minuteSpentChange}
                       />
                     </div>
                     <div className="input-time-segment">
                       <input 
                         type="number" 
-                        min={0}
+                        // min={0}
+                        // defaultValue={this.state.newLog.seconds}
                         className="form-control" 
                         id="input-add-log-timeSpent" 
-                        value={this.state.totalSavedTime}
-                        onChange={this.timeSpentChange}
+                        value={this.state.newLog.seconds}
+                        onChange={this.secondSpentChange}
                       />
                     </div>
                   </div>
