@@ -203,6 +203,7 @@ class LogCard extends React.Component {
   convertMillisecondToTimeFormat = () => {
     const tempTime = moment.duration(this.state.totalSavedTime);
     let hours,munites,seconds;
+
     if (tempTime.hours() < 10) {
       hours = '0' + tempTime.hours();
     } else {
@@ -315,16 +316,38 @@ class LogCard extends React.Component {
                 </div>
                 <div className="form-group">
                   <label htmlFor="input-add-log-timeSpent" className="col-sm-2 control-label">Time Spent</label>
-                  <div className="col-sm-10">
-                    <input 
-                      type="text" 
-                      className="form-control" 
-                      id="input-add-log-timeSpent" 
-                      value={this.state.totalSavedTime}
-                      onChange={this.timeSpentChange}
-                    />
+                  <div className="col-sm-10 input-time-segment-container">
+                    <div className="input-time-segment">
+                      <input 
+                        type="text" 
+                        className="form-control" 
+                        id="input-add-log-timeSpent" 
+                        value={this.state.totalSavedTime}
+                        onChange={this.timeSpentChange}
+                      />
+                    </div>
+                    <div className="input-time-segment">
+                      <input 
+                        type="text" 
+                        className="form-control" 
+                        id="input-add-log-timeSpent" 
+                        value={this.state.totalSavedTime}
+                        onChange={this.timeSpentChange}
+                      />
+                    </div>
+                    <div className="input-time-segment">
+                      <input 
+                        type="text" 
+                        className="form-control" 
+                        id="input-add-log-timeSpent" 
+                        value={this.state.totalSavedTime}
+                        onChange={this.timeSpentChange}
+                      />
+                    </div>
                   </div>
-                  <label htmlFor="input-add-log-timeSpent" className="control-label total-time-label">Total Unallocated Time: {this.convertMillisecondToTimeFormat()}</label>
+                  <div className="col-sm-10">
+                    <label htmlFor="input-add-log-timeSpent" className="control-label total-time-label">Total Unallocated Time: {this.convertMillisecondToTimeFormat()}</label>
+                  </div>
                 </div>
                 <div className="form-group">
                   <label htmlFor="input-add-log-summary" className="col-sm-2 control-label">Summary</label>

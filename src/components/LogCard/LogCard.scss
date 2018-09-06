@@ -68,5 +68,16 @@
   padding-right: 15px;
   float: right;
   text-align: right;
+  padding: 0;
+}
+
+.input-time-segment-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.input-time-segment {
+  display: inline-block;
+  width: 32%;
 }
 
