@@ -14,9 +14,11 @@ class TimeClock extends React.Component {
     amPm: "am",
     timelogId:'',
     isClockedIn: false,
+    totalSavedHours: 0,
   }
   
   componentDidMount () {
+    // this.getTotalHours();
     this.loadInterval = setInterval(
       this.getTime, 0
     );
@@ -103,8 +105,10 @@ class TimeClock extends React.Component {
         tempTimeLog.userClockInStatusFlag = uid + '-' + 'false';
         
         timeClockRequests.clockOut(timelogId,tempTimeLog)
-        .then(() => {
-          this.setState({isClockedIn: false});
+        .then((studySessionObject) => {
+          // need to post the duration here
+          this.setState({isClockedIn: false})
+          this.postStudyHoursEvent(studySessionObject.data);
         })
         .catch((err) => {
           console.error('Error with clock out: ', err);
@@ -113,8 +117,81 @@ class TimeClock extends React.Component {
       .catch((err) => {
         console.error('Error getting single time log: ', err);
       });
-  }
+  };
+
+  getStudyDuration = (studySession) => {
+    const start = moment(studySession.clockedOutAt);
+    const end = moment(studySession.clockedInAt); 
+    const diff = start.diff(end);
+    const duration = moment.utc(diff).format("HH:mm:ss");
+    return duration;
+  };
+
+  getTotalHours = () => {
+    const uid = authRequests.getUserId();
+    return timeClockRequests.getAllsavedTimeForCurrentUser(uid)
+      .then((savedtime) => {
+        if (savedtime) {
+          return savedtime.totalTime;
+        } else {
+          return 0;
+        }
+      })
+      .catch((err) => {
+        console.error('Error getting total saved hours: ',err);
+      });
+  };
+
+  calculateNewTotalHours = (studySessionObject) => { 
+    return this.getTotalHours().then((totalTime) => {
+      const savedHoursInMillisecond = moment.duration(totalTime);
+      // console.error('savedHoursInMillisecond',savedHoursInMillisecond);
+      const moreHoursToAdd = moment.duration(this.getStudyDuration(studySessionObject));
+      // console.error('moreHoursToAdd',moreHoursToAdd);
+      const newTotalStudyHoursToPost = savedHoursInMillisecond + moreHoursToAdd;
+      return newTotalStudyHoursToPost;
+    });
+  };
+
+  updateExistingTimeEvent = (savedtimeId,newTime) => {
+    timeClockRequests.updateExistingTime(savedtimeId,newTime)
+      .then(() => {
+        // console.error('updated');
+      })
+      .catch((err) => {
+        console.error('Error updating the existing time: ',err);
+      });
+  };
+
+  postStudyHoursEvent = (studySessionObject) => {
+    const uid = authRequests.getUserId();
+    this.calculateNewTotalHours(studySessionObject).then((newTotalHours) => {
+      const objectToPost = {
+        totalTime: newTotalHours, 
+        uid: uid
+      };
   
+      // if the user is first time clock in
+      // then post a new time
+      // if the user is not the first time clock in
+      // update the existing time
+      timeClockRequests.getAllsavedTimeForCurrentUser(uid)
+        .then((savedtime) => {
+          if (savedtime) {
+            this.updateExistingTimeEvent(savedtime.id,objectToPost);
+          } else {
+            timeClockRequests.postStudyHours(objectToPost)
+            .then(() => {
+              // console.error('Posted');
+            })
+          }
+        })
+    })
+    .catch((err) => {
+      console.error('Error getting back saved time: ',err);
+    });
+  };
+
   render () {
     const renderClockButton = () => {
       if (this.state.isClockedIn) {

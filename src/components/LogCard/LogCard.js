@@ -5,7 +5,6 @@ import authRequests from '../../firebaseRequests/auth';
 import timeClockRequests from '../../firebaseRequests/timeClock';
 import { Modal, Button } from 'react-bootstrap';
 import moment from 'moment';
-import { createSocket } from 'dgram';
 
 class LogCard extends React.Component {
   state = {
@@ -39,10 +38,8 @@ class LogCard extends React.Component {
     this.setState({ show: false });
   }
 
-  handleShow = (e) => {
-    const fromButton = e.target.dataset.fromButton;
+  handleShow = () => {
     this.setState({ show: true });
-    this.setState({fromButton});
   }
 
   titleChange = (e) => {
@@ -112,25 +109,28 @@ class LogCard extends React.Component {
   };
 
   populateExistingLog = (e) => {
-    const currentDate = moment().format('l');
+    this.getAllSavedHoursForCurrentUserEvent();
+    const fromButton = e.target.dataset.fromButton;
     const logId = e.target.dataset.logEditId;
-    if (logId) {
-      logRequests.getSingleLog(logId)
-        .then((log) => {
-          this.setState({newLog: log});
-        })
-        .catch((err) => {
-          console.error('Error with getting single log: ', err);
-        });
-      this.handleShow(e);
-    } else {
-      this.setState({newLog: {title: '', summary: '', timeSpent:'', date:currentDate}});
-      this.handleShow(e);
-    };
-    // set the log id to the state for update function
-    this.setState({logIdSelected: logId});
+    const currentDate = moment().format('l');
 
-    this.checkIsClockedOut();
+    this.setState({fromButton}, () => {
+      if (logId) {
+        logRequests.getSingleLog(logId)
+          .then((log) => {
+            this.setState({newLog: log});
+          })
+          .catch((err) => {
+            console.error('Error with getting single log: ', err);
+          });
+        this.checkIsClockedOut();
+      } else {
+        this.setState({newLog: {title: '', summary: '', timeSpent:'', date:currentDate}});
+        this.checkIsClockedOut();
+      };
+      // set the log id to the state for update function
+      this.setState({logIdSelected: logId});
+    });
   }
 
   updateLogEvent = () => {
@@ -162,13 +162,17 @@ class LogCard extends React.Component {
     timeClockRequests.getLatestTimeLogForCurrentUser(userClockInStatusFlag)
       .then((latestTimeLog) => {
         if (latestTimeLog === undefined) {
-          this.setState({isClockedOut: true});
+          this.setState({isClockedOut: true}, () => {
+            this.handleShow();
+          });
+        } else {
+          this.handleShow();
         }
       })
       .catch((err) => {
         console.error('Error with getting latest time log: ', err);
       })
-  }
+  };
 
   printAlertForClockOut = () => {
     if (!this.state.isClockedOut) {
@@ -182,6 +186,17 @@ class LogCard extends React.Component {
     } else {
       return <Button onClick={this.updateLogEvent}>Save</Button>
     }
+  };
+
+  getAllSavedHoursForCurrentUserEvent = () => {
+    const uid = authRequests.getUserId();
+    timeClockRequests.getAllSavedHoursForCurrentUser(uid)
+      .then((savedhours) => {
+        console.error(savedhours.totalHours);
+      })
+      .catch((err) => {
+        console.error('Error getting total saved hours: ',err);
+      });
   };
 
   render () {
