@@ -60,10 +60,10 @@ const getLatestTimeLogForCurrentUser = (userClockInStatusFlag) => {
   });
 }
 
-const getAllSavedHoursForCurrentUser = (uid) => {
+const getAllsavedTimeForCurrentUser = (uid) => {
   return new Promise((resolve, reject) => {
     axios
-      .get(`${constants.firebaseConfig.databaseURL}/savedhours.json?orderBy="uid"&equalTo="${uid}"`)
+      .get(`${constants.firebaseConfig.databaseURL}/savedtime.json?orderBy="uid"&equalTo="${uid}"`)
       .then(res => {
         let logKey = {};
         if (Object.keys(res.data).length > 0) {
@@ -81,7 +81,7 @@ const getAllSavedHoursForCurrentUser = (uid) => {
 const postStudyHours = (hoursToPost) => {
   return new Promise((resolve,reject) => {
     axios
-      .post(`${constants.firebaseConfig.databaseURL}/savedhours.json`,hoursToPost)
+      .post(`${constants.firebaseConfig.databaseURL}/savedtime.json`,hoursToPost)
       .then((res) => {
         resolve(res.data);
       })
@@ -91,4 +91,25 @@ const postStudyHours = (hoursToPost) => {
   });
 };
 
-export default {clockIn, clockOut, getSingleTimeLog, getLatestTimeLogForCurrentUser,getAllSavedHoursForCurrentUser,postStudyHours};
+const updateExistingTime = (savedtimeId,newTime) => {
+  return new Promise((resolve,reject) => {
+    axios
+      .put(`${constants.firebaseConfig.databaseURL}/savedtime/${savedtimeId}.json`,newTime)
+      .then((res) => {
+        resolve(res);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+}
+
+export default {
+  clockIn, 
+  clockOut,
+  getSingleTimeLog,
+  getLatestTimeLogForCurrentUser,
+  getAllsavedTimeForCurrentUser,
+  postStudyHours,
+  updateExistingTime,
+};

@@ -129,10 +129,10 @@ class TimeClock extends React.Component {
 
   getTotalHours = () => {
     const uid = authRequests.getUserId();
-    timeClockRequests.getAllSavedHoursForCurrentUser(uid)
+    timeClockRequests.getAllsavedTimeForCurrentUser(uid)
       .then((savedtime) => {
-        if (savedtime.totalHours) {
-          const totalSavedHours = savedtime.totalHours;
+        if (savedtime.totalTime) {
+          const totalSavedHours = savedtime.totalTime;
           this.setState({totalSavedHours});
         } else {
           this.setState({totalSavedHours: 0});
@@ -150,20 +150,44 @@ class TimeClock extends React.Component {
     return newTotalStudyHoursToPost;
   };
 
+  updateExistingTimeEvent = (savedtimeId,newTime) => {
+    timeClockRequests.updateExistingTime(savedtimeId,newTime)
+      .then(() => {
+        // console.error('updated');
+      })
+      .catch((err) => {
+        console.error('Error updating the existing time: ',err);
+      });
+  };
+
   postStudyHoursEvent = (studySessionObject) => {
     const uid = authRequests.getUserId();
     const newTotalHours = this.calculateNewTotalHours(studySessionObject);
     const objectToPost = {
-      totalHours: newTotalHours, 
+      totalTime: newTotalHours, 
       uid: uid
     };
 
-    timeClockRequests.postStudyHours(objectToPost)
-      .then(() => {
-        // console.error('Posted');
+    // if the user is first time clock in
+    // then post a new time
+    // if the user is not the first time clock in
+    // update the existing time
+    timeClockRequests.getAllsavedTimeForCurrentUser(uid)
+      .then((savedtime) => {
+        if (savedtime) {
+          this.updateExistingTimeEvent(savedtime.id,objectToPost);
+        } else {
+          timeClockRequests.postStudyHours(objectToPost)
+          .then(() => {
+            // console.error('Posted');
+          })
+          .catch((err) => {
+            console.error('Error posting the study time: ',err);
+          })
+        }
       })
       .catch((err) => {
-        console.error('Error posting the study time: ',err);
+        console.error('Error getting back saved time: ',err);
       })
   };
 
