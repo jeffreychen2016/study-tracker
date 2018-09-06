@@ -18,7 +18,7 @@ class TimeClock extends React.Component {
   }
   
   componentDidMount () {
-    this.getTotalHours();
+    // this.getTotalHours();
     this.loadInterval = setInterval(
       this.getTime, 0
     );
@@ -129,13 +129,12 @@ class TimeClock extends React.Component {
 
   getTotalHours = () => {
     const uid = authRequests.getUserId();
-    timeClockRequests.getAllsavedTimeForCurrentUser(uid)
+    return timeClockRequests.getAllsavedTimeForCurrentUser(uid)
       .then((savedtime) => {
-        if (savedtime.totalTime) {
-          const totalSavedHours = savedtime.totalTime;
-          this.setState({totalSavedHours});
+        if (savedtime) {
+          return savedtime.totalTime;
         } else {
-          this.setState({totalSavedHours: 0});
+          return 0;
         }
       })
       .catch((err) => {
@@ -143,11 +142,15 @@ class TimeClock extends React.Component {
       });
   };
 
-  calculateNewTotalHours = (studySessionObject) => {
-    const savedHoursInMillisecond = moment.duration(this.state.totalSavedHours);
-    const moreHoursToAdd = moment.duration(this.getStudyDuration(studySessionObject));
-    const newTotalStudyHoursToPost = savedHoursInMillisecond + moreHoursToAdd;
-    return newTotalStudyHoursToPost;
+  calculateNewTotalHours = (studySessionObject) => { 
+    return this.getTotalHours().then((totalTime) => {
+      const savedHoursInMillisecond = moment.duration(totalTime);
+      // console.error('savedHoursInMillisecond',savedHoursInMillisecond);
+      const moreHoursToAdd = moment.duration(this.getStudyDuration(studySessionObject));
+      // console.error('moreHoursToAdd',moreHoursToAdd);
+      const newTotalStudyHoursToPost = savedHoursInMillisecond + moreHoursToAdd;
+      return newTotalStudyHoursToPost;
+    });
   };
 
   updateExistingTimeEvent = (savedtimeId,newTime) => {
@@ -162,33 +165,31 @@ class TimeClock extends React.Component {
 
   postStudyHoursEvent = (studySessionObject) => {
     const uid = authRequests.getUserId();
-    const newTotalHours = this.calculateNewTotalHours(studySessionObject);
-    const objectToPost = {
-      totalTime: newTotalHours, 
-      uid: uid
-    };
-
-    // if the user is first time clock in
-    // then post a new time
-    // if the user is not the first time clock in
-    // update the existing time
-    timeClockRequests.getAllsavedTimeForCurrentUser(uid)
-      .then((savedtime) => {
-        if (savedtime) {
-          this.updateExistingTimeEvent(savedtime.id,objectToPost);
-        } else {
-          timeClockRequests.postStudyHours(objectToPost)
-          .then(() => {
-            // console.error('Posted');
-          })
-          .catch((err) => {
-            console.error('Error posting the study time: ',err);
-          })
-        }
-      })
-      .catch((err) => {
-        console.error('Error getting back saved time: ',err);
-      })
+    this.calculateNewTotalHours(studySessionObject).then((newTotalHours) => {
+      const objectToPost = {
+        totalTime: newTotalHours, 
+        uid: uid
+      };
+  
+      // if the user is first time clock in
+      // then post a new time
+      // if the user is not the first time clock in
+      // update the existing time
+      timeClockRequests.getAllsavedTimeForCurrentUser(uid)
+        .then((savedtime) => {
+          if (savedtime) {
+            this.updateExistingTimeEvent(savedtime.id,objectToPost);
+          } else {
+            timeClockRequests.postStudyHours(objectToPost)
+            .then(() => {
+              // console.error('Posted');
+            })
+          }
+        })
+    })
+    .catch((err) => {
+      console.error('Error getting back saved time: ',err);
+    });
   };
 
   render () {
