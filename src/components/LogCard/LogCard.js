@@ -319,7 +319,8 @@ class LogCard extends React.Component {
                   <div className="col-sm-10 input-time-segment-container">
                     <div className="input-time-segment">
                       <input 
-                        type="text" 
+                        type="number" 
+                        min={0}
                         className="form-control" 
                         id="input-add-log-timeSpent" 
                         value={this.state.totalSavedTime}
@@ -328,7 +329,8 @@ class LogCard extends React.Component {
                     </div>
                     <div className="input-time-segment">
                       <input 
-                        type="text" 
+                        type="number" 
+                        min={0}
                         className="form-control" 
                         id="input-add-log-timeSpent" 
                         value={this.state.totalSavedTime}
@@ -337,7 +339,8 @@ class LogCard extends React.Component {
                     </div>
                     <div className="input-time-segment">
                       <input 
-                        type="text" 
+                        type="number" 
+                        min={0}
                         className="form-control" 
                         id="input-add-log-timeSpent" 
                         value={this.state.totalSavedTime}
