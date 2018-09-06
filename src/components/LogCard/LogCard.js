@@ -20,6 +20,7 @@ class LogCard extends React.Component {
     fromButton:'',
     logIdSelected:'',
     isClockedOut: false,
+    totalSavedTime: 0,
   };
 
   componentDidMount () {
@@ -190,9 +191,9 @@ class LogCard extends React.Component {
 
   getAllSavedHoursForCurrentUserEvent = () => {
     const uid = authRequests.getUserId();
-    timeClockRequests.getAllSavedHoursForCurrentUser(uid)
-      .then((savedhours) => {
-        console.error(savedhours.totalHours);
+    timeClockRequests.getAllsavedTimeForCurrentUser(uid)
+      .then((savedTime) => {
+        this.setState({totalSavedTime: savedTime.totalTime});
       })
       .catch((err) => {
         console.error('Error getting total saved hours: ',err);
@@ -295,7 +296,7 @@ class LogCard extends React.Component {
                       type="text" 
                       className="form-control" 
                       id="input-add-log-timeSpent" 
-                      value={this.state.newLog.timeSpent}
+                      value={this.state.totalSavedTime}
                       onChange={this.timeSpentChange}
                     />
                   </div>
