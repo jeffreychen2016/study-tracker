@@ -200,6 +200,30 @@ class LogCard extends React.Component {
       });
   };
 
+  convertMillisecondToTimeFormat = () => {
+    const tempTime = moment.duration(this.state.totalSavedTime);
+    let hours,munites,seconds;
+    if (tempTime.hours() < 10) {
+      hours = '0' + tempTime.hours();
+    } else {
+      hours = tempTime.hours();
+    };
+
+    if (tempTime.minutes() < 10) {
+      munites = '0' + tempTime.minutes();
+    } else {
+      munites = tempTime.minutes();
+    };
+
+    if (tempTime.seconds() < 10) {
+      seconds = '0' + tempTime.seconds();
+    } else {
+      seconds = tempTime.seconds();
+    }; 
+
+    return hours + ':' + munites + ':' + seconds;
+  }
+
   render () {
     const image = require(`../../imgs/category-card-add.png`);
     const logComponent = this.state.logs.map((log) => {
@@ -300,6 +324,7 @@ class LogCard extends React.Component {
                       onChange={this.timeSpentChange}
                     />
                   </div>
+                  <label htmlFor="input-add-log-timeSpent" className="control-label total-time-label">Total Unallocated Time: {this.convertMillisecondToTimeFormat()}</label>
                 </div>
                 <div className="form-group">
                   <label htmlFor="input-add-log-summary" className="col-sm-2 control-label">Summary</label>
