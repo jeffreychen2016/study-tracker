@@ -14,7 +14,7 @@ class TimeClock extends React.Component {
     amPm: "am",
     timelogId:'',
     isClockedIn: false,
-    totalSavedHours: '00:00:00',
+    totalSavedHours: 0,
   }
   
   componentDidMount () {
@@ -130,12 +130,12 @@ class TimeClock extends React.Component {
   getTotalHours = () => {
     const uid = authRequests.getUserId();
     timeClockRequests.getAllSavedHoursForCurrentUser(uid)
-      .then((savedhours) => {
-        if (savedhours.totalHours) {
-          const totalSavedHours = savedhours.totalHours;
+      .then((savedtime) => {
+        if (savedtime.totalHours) {
+          const totalSavedHours = savedtime.totalHours;
           this.setState({totalSavedHours});
         } else {
-          this.setState({totalSavedHours: '00:00:00'});
+          this.setState({totalSavedHours: 0});
         }
       })
       .catch((err) => {
@@ -144,18 +144,19 @@ class TimeClock extends React.Component {
   };
 
   calculateNewTotalHours = (studySessionObject) => {
-    const newTotalStudyHoursToPost = this.state.totalSavedHours + this.getStudyDuration(studySessionObject);
-    console.error('newTotalStudyHoursToPost:',newTotalStudyHoursToPost);
+    const savedHoursInMillisecond = moment.duration(this.state.totalSavedHours);
+    const moreHoursToAdd = moment.duration(this.getStudyDuration(studySessionObject));
+    const newTotalStudyHoursToPost = savedHoursInMillisecond + moreHoursToAdd;
     return newTotalStudyHoursToPost;
   };
 
   postStudyHoursEvent = (studySessionObject) => {
     const uid = authRequests.getUserId();
-    // const newTotalHours = this.calculateNewTotalHours(studySessionObject);
-    const newTotalHours = '01:15:01';
-    console.error('test:',moment.duration(newTotalHours));
-
-    const objectToPost = {totalHours: newTotalHours, uid: uid};
+    const newTotalHours = this.calculateNewTotalHours(studySessionObject);
+    const objectToPost = {
+      totalHours: newTotalHours, 
+      uid: uid
+    };
 
     timeClockRequests.postStudyHours(objectToPost)
       .then(() => {
