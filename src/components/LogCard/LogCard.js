@@ -13,13 +13,16 @@ class LogCard extends React.Component {
     newLog: {
       title: '',
       summary: '',
-      timeSpent:'',
+      hours: 0,
+      minutes:0,
+      seconds:0,
       date:'',
       categoryId:'',
     },
     fromButton:'',
     logIdSelected:'',
     isClockedOut: false,
+    totalSavedTime: 0,
   };
 
   componentDidMount () {
@@ -54,9 +57,21 @@ class LogCard extends React.Component {
     this.setState({newLog: tempNewLog});
   };
 
-  timeSpentChange = (e) => {
+  hourSpentChange = (e) => {
     const tempNewLog = {...this.state.newLog};
-    tempNewLog.timeSpent = e.target.value;
+    tempNewLog.hours = e.target.value;
+    this.setState({newLog: tempNewLog});
+  };
+
+  minuteSpentChange = (e) => {
+    const tempNewLog = {...this.state.newLog};
+    tempNewLog.minutes = e.target.value;
+    this.setState({newLog: tempNewLog});
+  };
+
+  secondSpentChange = (e) => {
+    const tempNewLog = {...this.state.newLog};
+    tempNewLog.seconds = e.target.value;
     this.setState({newLog: tempNewLog});
   };
 
@@ -125,7 +140,14 @@ class LogCard extends React.Component {
           });
         this.checkIsClockedOut();
       } else {
-        this.setState({newLog: {title: '', summary: '', timeSpent:'', date:currentDate}});
+        this.setState({newLog: {
+          title: '', 
+          summary: '', 
+          hours: 0,
+          minutes: 0,
+          seconds: 0,
+          date:currentDate}
+        });
         this.checkIsClockedOut();
       };
       // set the log id to the state for update function
@@ -190,16 +212,55 @@ class LogCard extends React.Component {
 
   getAllSavedHoursForCurrentUserEvent = () => {
     const uid = authRequests.getUserId();
-    timeClockRequests.getAllSavedHoursForCurrentUser(uid)
-      .then((savedhours) => {
-        console.error(savedhours.totalHours);
+    timeClockRequests.getAllsavedTimeForCurrentUser(uid)
+      .then((savedTime) => {
+        this.setState({totalSavedTime: savedTime.totalTime});
       })
       .catch((err) => {
         console.error('Error getting total saved hours: ',err);
       });
   };
 
+  convertMillisecondToTimeFormat = () => {
+    const tempTime = moment.duration(this.state.totalSavedTime);
+    let hours,munites,seconds;
+
+    if (tempTime.hours() < 10) {
+      hours = '0' + tempTime.hours();
+    } else {
+      hours = tempTime.hours();
+    };
+
+    if (tempTime.minutes() < 10) {
+      munites = '0' + tempTime.minutes();
+    } else {
+      munites = tempTime.minutes();
+    };
+
+    if (tempTime.seconds() < 10) {
+      seconds = '0' + tempTime.seconds();
+    } else {
+      seconds = tempTime.seconds();
+    }; 
+
+    return hours + ':' + munites + ':' + seconds;
+  }
+
+  // defaultStudyHour = () => {
+  //   const tempTime = moment.duration(this.state.totalSavedTime);
+  //   let hours;
+
+  //   if (tempTime.hours() < 10) {
+  //     hours = '0' + tempTime.hours();
+  //   } else {
+  //     hours = tempTime.hours();
+  //   };
+
+  //   return hours;
+  // };
+
   render () {
+    console.error(this.state.newLog.hours);
     const image = require(`../../imgs/category-card-add.png`);
     const logComponent = this.state.logs.map((log) => {
       return (
@@ -290,14 +351,43 @@ class LogCard extends React.Component {
                 </div>
                 <div className="form-group">
                   <label htmlFor="input-add-log-timeSpent" className="col-sm-2 control-label">Time Spent</label>
+                  <div className="col-sm-10 input-time-segment-container">
+                    <div className="input-time-segment">
+                      <input 
+                        type="number" 
+                        // min={0}
+                        // defaultValue={this.state.newLog.hours}
+                        className="form-control" 
+                        id="input-add-log-timeSpent" 
+                        value={this.state.newLog.hours}
+                        onChange={this.hourSpentChange}
+                      />
+                    </div>
+                    <div className="input-time-segment">
+                      <input 
+                        type="number" 
+                        // min={0}
+                        // defaultValue={this.state.newLog.minutes}
+                        className="form-control" 
+                        id="input-add-log-timeSpent" 
+                        value={this.state.newLog.minutes}
+                        onChange={this.minuteSpentChange}
+                      />
+                    </div>
+                    <div className="input-time-segment">
+                      <input 
+                        type="number" 
+                        // min={0}
+                        // defaultValue={this.state.newLog.seconds}
+                        className="form-control" 
+                        id="input-add-log-timeSpent" 
+                        value={this.state.newLog.seconds}
+                        onChange={this.secondSpentChange}
+                      />
+                    </div>
+                  </div>
                   <div className="col-sm-10">
-                    <input 
-                      type="text" 
-                      className="form-control" 
-                      id="input-add-log-timeSpent" 
-                      value={this.state.newLog.timeSpent}
-                      onChange={this.timeSpentChange}
-                    />
+                    <label htmlFor="input-add-log-timeSpent" className="control-label total-time-label">Total Unallocated Time: {this.convertMillisecondToTimeFormat()}</label>
                   </div>
                 </div>
                 <div className="form-group">
