@@ -93,6 +93,9 @@ class LogCard extends React.Component {
           .then((logs) => {
             // pull all logs again!
             this.setState({logs});
+
+            // deduct saved time after post a new log
+            this.deductAllocatedTime();
           })
           .catch((err) => {
             console.error('Error with pulling all logs again: ',err);
@@ -246,21 +249,77 @@ class LogCard extends React.Component {
     return hours + ':' + munites + ':' + seconds;
   }
 
-  // defaultStudyHour = () => {
-  //   const tempTime = moment.duration(this.state.totalSavedTime);
-  //   let hours;
+  useAllSavedTimeEvent = (e) => {
+    if (e.target.checked) {
+      const tempTime = moment.duration(this.state.totalSavedTime);
+      const tempNewLog = {...this.state.newLog};
+      tempNewLog.hours = tempTime.hours();
+      tempNewLog.minutes = tempTime.minutes();
+      tempNewLog.seconds = tempTime.seconds();
 
-  //   if (tempTime.hours() < 10) {
-  //     hours = '0' + tempTime.hours();
-  //   } else {
-  //     hours = tempTime.hours();
-  //   };
+      this.setState({newLog: tempNewLog});
+    } else {
+      const tempNewLog = {...this.state.newLog};
+      tempNewLog.hours = 0;
+      tempNewLog.minutes = 0;
+      tempNewLog.seconds = 0;
 
-  //   return hours;
-  // };
+      this.setState({newLog: tempNewLog});
+    }
+  }
+
+  updateExistingTimeEvent = (savedtimeId,newTime) => {
+    timeClockRequests.updateExistingTime(savedtimeId,newTime)
+      .then(() => {
+        // console.error('updated');
+      })
+      .catch((err) => {
+        console.error('Error updating the existing time: ',err);
+      });
+  };
+
+  convertTimeFormatToMillisecond = () => {
+    const time = this.state.newLog;
+    let hours,minutes,seconds;
+    if (time.hours < 10) {
+      hours = '0' + time.hours;
+    } else {
+      hours =  time.hours;
+    }
+
+    if (time.minutes < 10) {
+      minutes = '0' + time.minutes;
+    } else {
+      minutes =  time.minutes;
+    }
+
+    if (time.seconds < 10) {
+      seconds = '0' + time.seconds;
+    } else {
+      seconds =  time.seconds;
+    }
+
+    const totalTimeToDeduct = hours + ':' + minutes + ':' + seconds;
+    return moment.duration(totalTimeToDeduct);
+  };
+
+  deductAllocatedTime = () => {
+    const totalTimeToDeduct = this.convertTimeFormatToMillisecond();
+    const newTimeForUpdate = this.state.totalSavedTime - totalTimeToDeduct;
+    const uid = authRequests.getUserId();
+
+    const objectToPost = {
+      totalTime: newTimeForUpdate, 
+      uid: uid
+    };
+
+    timeClockRequests.getAllsavedTimeForCurrentUser(uid)
+    .then((savedtime) => {
+      this.updateExistingTimeEvent(savedtime.id,objectToPost);
+    });
+  };
 
   render () {
-    console.error(this.state.newLog.hours);
     const image = require(`../../imgs/category-card-add.png`);
     const logComponent = this.state.logs.map((log) => {
       return (
@@ -355,8 +414,7 @@ class LogCard extends React.Component {
                     <div className="input-time-segment">
                       <input 
                         type="number" 
-                        // min={0}
-                        // defaultValue={this.state.newLog.hours}
+                        min={0}
                         className="form-control" 
                         id="input-add-log-timeSpent" 
                         value={this.state.newLog.hours}
@@ -366,8 +424,7 @@ class LogCard extends React.Component {
                     <div className="input-time-segment">
                       <input 
                         type="number" 
-                        // min={0}
-                        // defaultValue={this.state.newLog.minutes}
+                        min={0}
                         className="form-control" 
                         id="input-add-log-timeSpent" 
                         value={this.state.newLog.minutes}
@@ -377,8 +434,7 @@ class LogCard extends React.Component {
                     <div className="input-time-segment">
                       <input 
                         type="number" 
-                        // min={0}
-                        // defaultValue={this.state.newLog.seconds}
+                        min={0}
                         className="form-control" 
                         id="input-add-log-timeSpent" 
                         value={this.state.newLog.seconds}
@@ -387,7 +443,14 @@ class LogCard extends React.Component {
                     </div>
                   </div>
                   <div className="col-sm-10">
-                    <label htmlFor="input-add-log-timeSpent" className="control-label total-time-label">Total Unallocated Time: {this.convertMillisecondToTimeFormat()}</label>
+                    <label htmlFor="input-add-log-timeSpent" className="control-label total-time-label">
+                      <input
+                        type="checkbox"
+                        id="use-all-time-checkbox"
+                        onChange={this.useAllSavedTimeEvent}
+                      />
+                    Use Total Unallocated Time: {this.convertMillisecondToTimeFormat()}
+                    </label>
                   </div>
                 </div>
                 <div className="form-group">
