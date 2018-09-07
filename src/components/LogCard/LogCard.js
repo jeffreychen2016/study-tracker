@@ -278,7 +278,7 @@ class LogCard extends React.Component {
       });
   };
 
-  deductAllocatedTime = () => {
+  convertTimeFormatToMillisecond = () => {
     const time = this.state.newLog;
     let hours,minutes,seconds;
     if (time.hours < 10) {
@@ -299,15 +299,24 @@ class LogCard extends React.Component {
       seconds =  time.seconds;
     }
 
-    const totalTimeToDeductInMillisecond = hours + ':' + minutes + ':' + seconds;
+    const totalTimeToDeduct = hours + ':' + minutes + ':' + seconds;
+    return moment.duration(totalTimeToDeduct);
+  };
 
-    console.error(totalTimeToDeductInMillisecond);
+  deductAllocatedTime = () => {
+    const totalTimeToDeduct = this.convertTimeFormatToMillisecond();
+    const newTimeForUpdate = this.state.totalSavedTime - totalTimeToDeduct;
+    const uid = authRequests.getUserId();
 
-    // const uid = authRequests.getUserId();
-    // timeClockRequests.getAllsavedTimeForCurrentUser(uid)
-    // .then((savedtime) => {
-    //   this.updateExistingTimeEvent(savedtime.id,objectToPost);
-    // });
+    const objectToPost = {
+      totalTime: newTimeForUpdate, 
+      uid: uid
+    };
+
+    timeClockRequests.getAllsavedTimeForCurrentUser(uid)
+    .then((savedtime) => {
+      this.updateExistingTimeEvent(savedtime.id,objectToPost);
+    });
   };
 
   render () {
