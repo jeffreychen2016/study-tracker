@@ -6,7 +6,7 @@ class Login extends React.Component {
   state = {
     user: {
       email: 'test@test.com',
-      password: '123456',
+      password: 'qq123456',
     },
   }
 
